@@ -4,44 +4,66 @@ import {
   Paper,
   Typography,
   makeStyles,
+  Link,
+  Button,
+  ButtonBase,
+  Box,
 } from "@material-ui/core";
+import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
+import { title } from "process";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+
+  box: {
+    boxSizing: "border-box",
+    width: "6rem",
+    height: "6rem",
+    padding: "0.2rem",
+    borderRadius: "1rem",
+    border: "0.5rem solid #eee",
   },
-  title: {
-    flexGrow: 1,
+
+  button: {
+    flexDirection: "column",
+    borderRadius: "0.2rem",
   },
-  paper: {
-    width: "5rem",
-    height: "5rem",
-  },
-  outerContainer: {
-    margin: "1rem",
-    padding: "1rem",
-  },
+
   logo: {
     width: "100%",
     height: "100%",
   },
 }));
 
-const Bookmark = ({ key }) => {
+const Bookmark = ({
+  key,
+  title,
+  url,
+  img,
+}: {
+  key: number;
+  title?: string;
+  url?: string;
+  img?: string;
+}) => {
   const classes = useStyles();
 
   return (
-    <Tooltip title="https://google.com" arrow>
+    <Tooltip title={url ?? "no url"} arrow>
       <Grid item>
-        <Paper elevation={3} key={key} className={classes.paper}>
-          <img src="logo192.png" alt="logo" className={classes.logo}></img>
-        </Paper>
-
-        <Typography variant="subtitle1">Title</Typography>
+        <ButtonBase className={classes.button} href={url}>
+          <Box key={key} className={classes.box}>
+            <img
+              src={img ?? "logo192.png"}
+              alt={title ?? "logo"}
+              className={classes.logo}
+            ></img>
+          </Box>
+          <Typography variant="subtitle1">{title ?? "No Title"}</Typography>
+        </ButtonBase>
       </Grid>
     </Tooltip>
   );

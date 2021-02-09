@@ -40,7 +40,12 @@ const BookmarkCategory = (): JSX.Element => {
         <Grid item>
           <Grid container spacing={3} justifyContent="center">
             {[0, 1, 2, 3, 4, 5, 6, 7].map((key) => (
-              <Bookmark key={key} />
+              <Bookmark
+                key={key}
+                title="Google"
+                url="https://google.com"
+                img="google.svg"
+              />
             ))}
           </Grid>
         </Grid>
