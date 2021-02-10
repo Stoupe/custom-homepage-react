@@ -47,9 +47,9 @@ const Bookmark = ({
   const classes = useStyles();
 
   return (
-    <Tooltip title={url ?? "no url"} arrow>
-      <Grid item>
-        <Grow in={true}>
+    <Grid item>
+      <Grow in={true}>
+        <Tooltip title={url ?? "no url"} arrow>
           <ButtonBase className={classes.button} href={url}>
             <Box className={classes.box}>
               <img
@@ -60,9 +60,9 @@ const Bookmark = ({
             </Box>
             <Typography variant="subtitle2">{title ?? "No Title"}</Typography>
           </ButtonBase>
-        </Grow>
-      </Grid>
-    </Tooltip>
+        </Tooltip>
+      </Grow>
+    </Grid>
   );
 };
 
