@@ -1,16 +1,23 @@
 import { Container } from "@material-ui/core";
-import React from "react";
+import React, { useContext } from "react";
 import BookmarkCategory from "./components/BookmarkCategory";
 import Header from "./components/Header";
+import { useFirebase } from "./functions/firebase";
+import { UserContext } from "./components/Contexts";
 
 const App = () => {
+  useFirebase();
+  const { user } = useContext(UserContext);
+
   return (
     <div>
       <Header />
-      <Container>
-        <BookmarkCategory />
-        <BookmarkCategory />
-      </Container>
+      {user && (
+        <Container>
+          <BookmarkCategory />
+          <BookmarkCategory />
+        </Container>
+      )}
     </div>
   );
 };

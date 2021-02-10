@@ -6,10 +6,13 @@ import {
   Typography,
   Menu,
   MenuItem,
+  Button,
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
-import React from "react";
+import React, { useContext, useState } from "react";
 import MenuIcon from "@material-ui/icons/Menu";
+import { UserContext } from "./Contexts";
+import { logInWithGoogle, logOut } from "../functions/auth";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,9 +35,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Header: React.FC = () => {
+  const { user, setUser } = useContext(UserContext);
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -58,7 +61,7 @@ const Header: React.FC = () => {
         <Typography variant="h6" className={classes.title} component="div">
           Bookmarks
         </Typography>
-        {auth && (
+        {user ? (
           <div>
             <IconButton
               aria-label="account of current user"
@@ -84,9 +87,40 @@ const Header: React.FC = () => {
               open={Boolean(anchorEl)}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Profile</MenuItem>
-              <MenuItem onClick={handleClose}>My account</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  logOut()
+                    .then((user) => {
+                      setUser(user);
+                      console.log("logged out");
+                      handleClose();
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
+              >
+                Log Out
+              </MenuItem>
             </Menu>
+          </div>
+        ) : (
+          <div>
+            <Button
+              color="inherit"
+              variant="outlined"
+              onClick={() => {
+                logInWithGoogle()
+                  .then((user) => {
+                    setUser(user);
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }}
+            >
+              Log in with Google
+            </Button>
           </div>
         )}
       </Toolbar>

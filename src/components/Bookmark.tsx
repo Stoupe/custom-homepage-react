@@ -8,16 +8,13 @@ import {
   Button,
   ButtonBase,
   Box,
+  Grow,
 } from "@material-ui/core";
 import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
 import { title } from "process";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
-
   box: {
     boxSizing: "border-box",
     width: "6rem",
@@ -39,12 +36,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Bookmark = ({
-  key,
   title,
   url,
   img,
 }: {
-  key: number;
   title?: string;
   url?: string;
   img?: string;
@@ -54,16 +49,18 @@ const Bookmark = ({
   return (
     <Tooltip title={url ?? "no url"} arrow>
       <Grid item>
-        <ButtonBase className={classes.button} href={url}>
-          <Box key={key} className={classes.box}>
-            <img
-              src={img ?? "logo192.png"}
-              alt={title ?? "logo"}
-              className={classes.logo}
-            ></img>
-          </Box>
-          <Typography variant="subtitle1">{title ?? "No Title"}</Typography>
-        </ButtonBase>
+        <Grow in={true}>
+          <ButtonBase className={classes.button} href={url}>
+            <Box className={classes.box}>
+              <img
+                src={img ?? "logo192.png"}
+                alt={title ?? "logo"}
+                className={classes.logo}
+              ></img>
+            </Box>
+            <Typography variant="subtitle2">{title ?? "No Title"}</Typography>
+          </ButtonBase>
+        </Grow>
       </Grid>
     </Tooltip>
   );
