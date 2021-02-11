@@ -29,8 +29,7 @@ export const useFirebase = (): firebase.firestore.Firestore => {
     if ("measurementId" in firebaseConfig && typeof window !== "undefined") {
       firebase.analytics();
     }
-
-    const db = firebase.firestore();
-    return db;
   }
+  const db = firebase.firestore();
+  return db;
 };

@@ -1,9 +1,9 @@
 import { Container } from "@material-ui/core";
 import React, { useContext } from "react";
-import BookmarkCategory from "./components/BookmarkCategory";
-import Header from "./components/Header";
-import { useFirebase } from "./functions/firebase";
-import { UserContext } from "./components/Contexts";
+import Header from "./Header";
+import { useFirebase } from "../functions/firebase";
+import { UserContext } from "./Contexts";
+import Bookmarks from "./Bookmarks";
 
 const App = () => {
   useFirebase();
@@ -14,8 +14,7 @@ const App = () => {
       <Header />
       {user && (
         <Container>
-          <BookmarkCategory />
-          <BookmarkCategory />
+          <Bookmarks />
         </Container>
       )}
     </div>

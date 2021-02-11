@@ -1,17 +1,12 @@
 import {
-  Tooltip,
-  Grid,
-  Paper,
-  Typography,
-  makeStyles,
-  Link,
-  Button,
-  ButtonBase,
   Box,
+  ButtonBase,
+  Grid,
   Grow,
+  makeStyles,
+  Tooltip,
+  Typography,
 } from "@material-ui/core";
-import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
-import { title } from "process";
 import React from "react";
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     height: "6rem",
     padding: "0.2rem",
     borderRadius: "1rem",
-    border: "0.5rem solid #eee",
+    border: "0.5rem solid #ddd",
   },
 
   button: {
