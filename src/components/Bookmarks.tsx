@@ -25,15 +25,21 @@ const Bookmarks: React.FC = (): JSX.Element => {
   const [bookmarks, setBookmarks] = useState({});
 
   useEffect(() => {
-    console.log("using effect");
-
     const observer = bookmarksRef.onSnapshot(
       (querySnapshot) => {
         if (!querySnapshot.empty) {
           const tempBookmarks = {};
 
           querySnapshot.docs.forEach((doc) => {
-            tempBookmarks[doc.id] = doc.data();
+            const data = doc.data();
+            const id = doc.id;
+            const category = data.category;
+
+            if (!tempBookmarks[category]) {
+              tempBookmarks[category] = {};
+            }
+
+            tempBookmarks[category][id] = data;
           });
 
           setBookmarks(tempBookmarks);
@@ -124,7 +130,9 @@ const Bookmarks: React.FC = (): JSX.Element => {
           <Button onClick={addBookmark}>Add</Button>
         </DialogActions>
       </Dialog>
-      <BookmarkCategory bookmarks={bookmarks} />
+      {Object.entries(bookmarks).map(([key, value]) => {
+        return <BookmarkCategory key={key} category={key} bookmarks={value} />;
+      })}
     </>
   );
 };

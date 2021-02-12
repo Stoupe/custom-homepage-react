@@ -1,4 +1,10 @@
-import { Grid, makeStyles, Paper, withStyles } from "@material-ui/core";
+import {
+  Grid,
+  makeStyles,
+  Paper,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import React from "react";
 import Bookmark from "./Bookmark";
 
@@ -14,23 +20,33 @@ const s = {
   backgroundColor: "#eee",
 };
 
-const BookmarkCategory = ({ bookmarks }: { bookmarks?: {} }): JSX.Element => {
-  console.log(bookmarks);
+const BookmarkCategory = ({
+  category,
+  bookmarks,
+}: {
+  category: string;
+  bookmarks?: Record<string, any>;
+}): JSX.Element => {
+  // console.log(bookmarks);
   const classes = useStyles();
 
   return (
     <Paper style={s} className={classes.root} variant="outlined">
+      <Typography variant="h5">{category}</Typography>
       <Grid container justifyContent="center">
         <Grid item>
           <Grid container spacing={3} justifyContent="center">
-            {Object.keys(bookmarks).map((key) => (
-              <Bookmark
-                key={key}
-                title={bookmarks[key].title}
-                url={bookmarks[key].url}
-                img="google.svg"
-              />
-            ))}
+            {Object.entries(bookmarks).map(([key, value]) => {
+              console.log(value);
+              return (
+                <Bookmark
+                  key={key}
+                  title={value.title}
+                  url={value.url}
+                  img="google.svg"
+                />
+              );
+            })}
           </Grid>
         </Grid>
       </Grid>
