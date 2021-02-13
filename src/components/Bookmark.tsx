@@ -7,7 +7,9 @@ import {
   Tooltip,
   Typography,
 } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
+
+// import fetchFavicon from "@getstation/fetch-favicon";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -40,6 +42,10 @@ const Bookmark = ({
   img?: string;
 }) => {
   const classes = useStyles();
+
+  // useEffect(() => {
+  //   console.log(fetchFavicon("google.com", 100));
+  // }, []);
 
   return (
     <Grid item>

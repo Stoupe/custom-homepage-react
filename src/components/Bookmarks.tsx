@@ -1,11 +1,13 @@
 import {
   Autocomplete,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Skeleton,
   TextField,
   Typography,
 } from "@material-ui/core";
@@ -22,7 +24,7 @@ const Bookmarks: React.FC = (): JSX.Element => {
     .doc(user.uid)
     .collection("bookmarks");
 
-  const [bookmarks, setBookmarks] = useState({});
+  const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
 
   useEffect(() => {
     const observer = bookmarksRef.onSnapshot(
@@ -130,6 +132,9 @@ const Bookmarks: React.FC = (): JSX.Element => {
           <Button onClick={addBookmark}>Add</Button>
         </DialogActions>
       </Dialog>
+
+      {Object.keys(bookmarks).length === 0 && <CircularProgress />}
+
       {Object.entries(bookmarks).map(([key, value]) => {
         return <BookmarkCategory key={key} category={key} bookmarks={value} />;
       })}
