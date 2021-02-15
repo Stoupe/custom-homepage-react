@@ -9,7 +9,8 @@ import {
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 
-// import fetchFavicon from "@getstation/fetch-favicon";
+// const scrapFavicon = require("scrap-favicon");
+// import scrapFavicon from "scrap-favicon";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -17,13 +18,13 @@ const useStyles = makeStyles((theme) => ({
     width: "6rem",
     height: "6rem",
     padding: "0.2rem",
-    borderRadius: "1rem",
+    borderRadius: "1.5rem",
     border: "0.5rem solid #ddd",
   },
 
   button: {
     flexDirection: "column",
-    borderRadius: "0.2rem",
+    // borderRadius: "0.2rem",
   },
 
   logo: {
@@ -42,10 +43,6 @@ const Bookmark = ({
   img?: string;
 }) => {
   const classes = useStyles();
-
-  // useEffect(() => {
-  //   console.log(fetchFavicon("google.com", 100));
-  // }, []);
 
   return (
     <Grid item>

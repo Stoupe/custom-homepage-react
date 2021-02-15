@@ -1,22 +1,35 @@
 import {
   Autocomplete,
+  Box,
   Button,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  Skeleton,
+  FormControl,
+  makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
-import React, { useContext, useEffect, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import BookmarkCategory from "./BookmarkCategory";
 import { UserContext } from "./Contexts";
 
+const useStyles = makeStyles((theme) => ({
+  thumbnail: {
+    border: "5px solid #ccc",
+    borderRadius: "1rem",
+  },
+  input: {
+    // height: "3rem",
+    margin: "1rem 0 1rem 0",
+  },
+}));
+
 const Bookmarks: React.FC = (): JSX.Element => {
+  const classes = useStyles();
   const { user } = useContext(UserContext);
   const db = useFirebase();
   const bookmarksRef = db
@@ -25,6 +38,11 @@ const Bookmarks: React.FC = (): JSX.Element => {
     .collection("bookmarks");
 
   const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
+  const [title, setTitle] = useState("");
+  const [url, setUrl] = useState("");
+  const [category, setCategory] = useState("");
+
+  const [addingBookmark, setAddingBookmark] = useState(false);
 
   useEffect(() => {
     const observer = bookmarksRef.onSnapshot(
@@ -60,19 +78,27 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [category, setCategory] = useState("");
-
-  const [addingBookmark, setAddingBookmark] = useState(false);
-
-  const addBookmark = () => {
+  const addBookmark = (e: FormEvent) => {
+    e.preventDefault();
     bookmarksRef.add({ title: title, url: url, category: category });
+  };
+
+  const [image, setImage] = useState();
+  const [imgUrl, setImgUrl] = useState<any>();
+
+  const handleImageUpload = (e) => {
+    const image = e.target.files[0];
+    setImage(image);
+
+    const reader = new FileReader();
+    reader.readAsDataURL(image);
+    reader.onload = () => {
+      setImgUrl(reader.result);
+    };
   };
 
   return (
     <>
-      {/* <div>{JSON.stringify(bookmarks)}</div> */}
       <Button
         onClick={() => {
           setAddingBookmark(true);
@@ -89,48 +115,67 @@ const Bookmarks: React.FC = (): JSX.Element => {
           setAddingBookmark(false);
         }}
       >
-        <DialogTitle>New Bookmark</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            label="Title"
-            type="text"
-            fullWidth
-            variant="standard"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
-          />
-          <TextField
-            label="URL"
-            type="url"
-            fullWidth
-            variant="standard"
-            value={url}
-            onChange={(e) => {
-              setUrl(e.target.value);
-            }}
-          />
-          <Typography>upload or select image here</Typography>
-          <Autocomplete
-            freeSolo
-            options={["SWEN 325", "SWEN 324", "ENGR 301"]}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Category"
-                value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                }}
-              />
+        <form onSubmit={addBookmark}>
+          <DialogTitle>New Bookmark</DialogTitle>
+          <DialogContent>
+            <TextField
+              className={classes.input}
+              autoFocus
+              label="Title"
+              type="text"
+              fullWidth
+              value={title}
+              required
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            />
+            <TextField
+              className={classes.input}
+              label="URL"
+              type="url"
+              fullWidth
+              value={url}
+              required
+              onChange={(e) => {
+                setUrl(e.target.value);
+              }}
+            />
+
+            <Typography>Upload or select image here</Typography>
+            <Button variant="contained" component="label">
+              Upload Image
+              <input type="file" hidden required onChange={handleImageUpload} />
+            </Button>
+            {imgUrl && (
+              <Box className={classes.thumbnail}>
+                <img
+                  src={imgUrl}
+                  alt="uploaded bookmark thumbnail"
+                  width="100px"
+                ></img>
+              </Box>
             )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={addBookmark}>Add</Button>
-        </DialogActions>
+            <Autocomplete
+              freeSolo
+              options={["should automatically use existing categories"]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  required
+                  label="Category"
+                  value={category}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                  }}
+                />
+              )}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button type="submit">Add</Button>
+          </DialogActions>
+        </form>
       </Dialog>
 
       {Object.keys(bookmarks).length === 0 && <CircularProgress />}
