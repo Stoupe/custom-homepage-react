@@ -1,4 +1,9 @@
-import { Container, Fab, makeStyles } from "@material-ui/core";
+import {
+  Container,
+  Fab as MuiFab,
+  makeStyles,
+  styled,
+} from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
@@ -7,12 +12,14 @@ import Bookmarks from "./Bookmarks";
 import { BookmarksContext, UserContext } from "./Contexts";
 import Header from "./Header";
 
+// Fix for MUIv5 ButtonBase styles overriding Fab styles
+const Fab = styled(MuiFab)({});
+
 const useStyles = makeStyles((theme) => ({
   fab: {
     position: "absolute",
     bottom: "1rem",
     right: "1rem",
-    borderRadius: "50%",
   },
 }));
 
@@ -72,12 +79,12 @@ const App = () => {
           <Bookmarks />
         </Container>
       )}
+
       <Fab
         color="primary"
         aria-label="add bookmark"
         size="large"
         className={styles.fab}
-        // style={{ position: "fixed", borderRadius: "50%" }}
         onClick={() => setAddingBookmark((prevState) => !prevState)}
       >
         <AddIcon />
