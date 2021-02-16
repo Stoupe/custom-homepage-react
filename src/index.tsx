@@ -6,7 +6,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import { UserContext } from "./components/Contexts";
+import { BookmarksContext, UserContext } from "./components/Contexts";
 import firebase from "firebase/app";
 
 const Index = () => {
@@ -14,10 +14,14 @@ const Index = () => {
     JSON.parse(localStorage.getItem("user"))
   );
 
+  const [bookmarks, setBookmarks] = useState<Record<string, any>>(null);
+
   return (
     <React.StrictMode>
       <UserContext.Provider value={{ user, setUser }}>
-        <App />
+        <BookmarksContext.Provider value={{ bookmarks, setBookmarks }}>
+          <App />
+        </BookmarksContext.Provider>
       </UserContext.Provider>
     </React.StrictMode>
   );

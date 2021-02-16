@@ -1,11 +1,4 @@
-import {
-  Grid,
-  makeStyles,
-  Paper,
-  Typography,
-  withStyles,
-  Box,
-} from "@material-ui/core";
+import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import Bookmark from "./Bookmark";
 
