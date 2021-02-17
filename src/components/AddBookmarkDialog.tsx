@@ -8,20 +8,42 @@ import {
   DialogTitle,
   makeStyles,
   TextField,
+  ThemeProvider,
   Typography,
 } from "@material-ui/core";
-import React, { FormEvent, useContext, useState } from "react";
+import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    // display: "flex",
+    // flexDirection: "column",
+    // margin: "5rem",
+  },
+  // title: {
+  //   "& > *": {
+  //     paddingTop: theme.spacing(1),
+  //     paddingBottom: theme.spacing(1),
+  //   },
+  // },
+  input: {
+    // margin: "3rem",
+    "& > div": {
+      padding: theme.spacing(1),
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+    },
+  },
+  autocomplete: {
+    "& > div": {
+      marginTop: theme.spacing(2),
+      // padding: "4rem",
+    },
+  },
   thumbnail: {
     border: "5px solid #ccc",
     borderRadius: "1rem",
-  },
-  input: {
-    // height: "3rem",
-    margin: "1rem 0 1rem 0",
   },
 }));
 
@@ -47,6 +69,8 @@ const AddBookmarkDialog = ({
     .doc(user.uid)
     .collection("bookmarks");
 
+  const [bookmarkCategories, setBookmarkCategories] = useState([]);
+
   const handleImageUpload = (e) => {
     const image = e.target.files[0];
     setImage(image);
@@ -63,15 +87,23 @@ const AddBookmarkDialog = ({
     bookmarksRef.add({ title: title, url: url, category: category });
   };
 
+  useEffect(() => {
+    Object.values(bookmarks).forEach((category: Record<string, any>) => {
+      const categoryName = Object.values(category).pop().category;
+      setBookmarkCategories((prevState) => [...prevState, categoryName]);
+    });
+  }, [bookmarks]);
+
   return (
     <Dialog
+      className={classes.root}
       open={addingBookmark}
       onClose={() => {
         setAddingBookmark(false);
       }}
     >
+      <DialogTitle>New Bookmark</DialogTitle>
       <form onSubmit={addBookmark}>
-        <DialogTitle>New Bookmark</DialogTitle>
         <DialogContent>
           <TextField
             className={classes.input}
@@ -79,6 +111,7 @@ const AddBookmarkDialog = ({
             label="Title"
             type="text"
             fullWidth
+            // margin="dense"
             value={title}
             required
             onChange={(e) => {
@@ -90,6 +123,7 @@ const AddBookmarkDialog = ({
             label="URL"
             type="url"
             fullWidth
+            // margin="normal"
             value={url}
             required
             onChange={(e) => {
@@ -97,7 +131,11 @@ const AddBookmarkDialog = ({
             }}
           />
 
-          <Typography>Upload or select image here</Typography>
+          {/* ====================== */}
+
+          <Typography variant="subtitle1">
+            Upload or select image here
+          </Typography>
           <Button variant="contained" component="label">
             Upload Image
             <input type="file" hidden required onChange={handleImageUpload} />
@@ -111,9 +149,13 @@ const AddBookmarkDialog = ({
               ></img>
             </Box>
           )}
+
+          {/* ===================== */}
+
           <Autocomplete
             freeSolo
-            options={["should automatically use existing categories"]}
+            className={classes.autocomplete}
+            options={bookmarkCategories}
             renderInput={(params) => (
               <TextField
                 {...params}

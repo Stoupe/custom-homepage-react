@@ -8,19 +8,22 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BookmarksContext, UserContext } from "./components/Contexts";
 import firebase from "firebase/app";
+import { StylesProvider } from "@material-ui/core/styles";
 
 const Index = () => {
   const [user, setUser] = useState<firebase.User>(
     JSON.parse(localStorage.getItem("user"))
   );
 
-  const [bookmarks, setBookmarks] = useState<Record<string, any>>(null);
+  const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
 
   return (
     <React.StrictMode>
       <UserContext.Provider value={{ user, setUser }}>
         <BookmarksContext.Provider value={{ bookmarks, setBookmarks }}>
-          <App />
+          <StylesProvider injectFirst>
+            <App />
+          </StylesProvider>
         </BookmarksContext.Provider>
       </UserContext.Provider>
     </React.StrictMode>
