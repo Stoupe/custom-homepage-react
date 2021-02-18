@@ -9,8 +9,11 @@ import "@fontsource/roboto/700.css";
 import { BookmarksContext, UserContext } from "./components/Contexts";
 import firebase from "firebase/app";
 import { StylesProvider } from "@material-ui/core/styles";
+import { useFirebase } from "./functions/firebase";
 
 const Index = () => {
+  useFirebase();
+
   const [user, setUser] = useState<firebase.User>(
     JSON.parse(localStorage.getItem("user"))
   );
