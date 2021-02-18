@@ -1,5 +1,11 @@
-import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
-import React, { useContext, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CircularProgress,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
+import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import BookmarkCategory from "./BookmarkCategory";
 import { BookmarksContext, UserContext } from "./Contexts";
@@ -20,6 +26,7 @@ const Bookmarks: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const { user } = useContext(UserContext);
   const { bookmarks, setBookmarks } = useContext(BookmarksContext);
+  const [loading, setLoading] = useState(true);
 
   const db = useFirebase();
 
@@ -50,7 +57,10 @@ const Bookmarks: React.FC = (): JSX.Element => {
           });
 
           setBookmarks(tempBookmarks);
+        } else {
+          setBookmarks({});
         }
+        setLoading(false);
       },
       (err) => {
         console.log(err);
@@ -62,13 +72,13 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  // if (Object.keys(bookmarks).length === 0) return null;
+  if (loading) return <CircularProgress />;
 
   return (
     <div className={classes.root}>
       {/* TODO: Form validation, sumbit on enter, reset values on enter, no duplicates, auto update categories */}
 
-      {Object.keys(bookmarks).length === 0 && (
+      {Object.keys(bookmarks).length === 0 && !loading && (
         <div className={classes.noBookmarksContainer}>
           <Card className={classes.noBookmarks}>
             <CardContent>
