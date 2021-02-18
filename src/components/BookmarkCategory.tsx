@@ -42,7 +42,7 @@ const BookmarkCategory = ({
                     key={key}
                     title={value.title}
                     url={value.url}
-                    img="google.svg"
+                    img={value.imgUrl}
                   />
                 );
               })}

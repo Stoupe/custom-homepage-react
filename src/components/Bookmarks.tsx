@@ -1,23 +1,58 @@
 import { CircularProgress, makeStyles } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
+import { useFirebase } from "../functions/firebase";
 import BookmarkCategory from "./BookmarkCategory";
 import { BookmarksContext, UserContext } from "./Contexts";
 
 const useStyles = makeStyles((theme) => ({
-  thumbnail: {
-    border: "5px solid #ccc",
-    borderRadius: "1rem",
-  },
-  input: {
-    // height: "3rem",
-    margin: "1rem 0 1rem 0",
-  },
+  root: {},
 }));
 
 const Bookmarks: React.FC = (): JSX.Element => {
   const classes = useStyles();
   const { user } = useContext(UserContext);
   const { bookmarks, setBookmarks } = useContext(BookmarksContext);
+
+  const db = useFirebase();
+
+  const bookmarksRef = db
+    .collection("users")
+    .doc(user.uid)
+    .collection("bookmarks");
+
+  /**
+   * Set up listener for bookmarks
+   */
+  useEffect(() => {
+    const observer = bookmarksRef.onSnapshot(
+      (querySnapshot) => {
+        if (!querySnapshot.empty) {
+          const tempBookmarks = {};
+
+          querySnapshot.docs.forEach((doc) => {
+            const data = doc.data();
+            const id = doc.id;
+            const category = data.category;
+
+            if (!tempBookmarks[category]) {
+              tempBookmarks[category] = {};
+            }
+
+            tempBookmarks[category][id] = data;
+          });
+
+          setBookmarks(tempBookmarks);
+        }
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+
+    return () => {
+      observer();
+    };
+  }, []);
 
   if (!bookmarks) return null;
 

@@ -14,6 +14,10 @@ import {
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
+import firebase from "firebase/app";
+import "firebase/storage";
+import { title } from "node:process";
+import { url } from "node:inspector";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,9 +58,9 @@ const AddBookmarkDialog = ({
   const { user } = useContext(UserContext);
   const { bookmarks, setBookmarks } = useContext(BookmarksContext);
 
-  const [title, setTitle] = useState("");
-  const [url, setUrl] = useState("");
-  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("Test");
+  const [url, setUrl] = useState("https://example.com");
+  const [category, setCategory] = useState("General");
   const [image, setImage] = useState();
   const [imgUrl, setImgUrl] = useState<any>();
 
@@ -82,9 +86,90 @@ const AddBookmarkDialog = ({
     };
   };
 
-  const addBookmark = (e: FormEvent) => {
+  const uploadThumbnail = async () => {
+    const storageRef = firebase.storage().ref();
+
+    const uploadTask = storageRef.child(`images/${title}-${url}`).put(image);
+    console.log("created upload task");
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log("Upload is " + progress + "% done");
+        switch (snapshot.state) {
+          case "paused": // or 'paused'
+            console.log("Upload is paused");
+            break;
+          case "running": // or 'running'
+            console.log("Upload is running");
+            break;
+        }
+      },
+      (error) => {
+        console.log(error);
+        return Promise.reject(error);
+      },
+      () => {
+        uploadTask.snapshot.ref.getDownloadURL().then((dlUrl: string) => {
+          console.log("Download URL: ", dlUrl);
+          setImgUrl("" + dlUrl);
+          return Promise.resolve();
+          // downloadURL = dlUrl;
+
+          // return Promise.resolve(dlUrl);
+          // setImgUrl();
+          // return Promise.resolve(downloadURL.toString());
+        });
+      }
+    );
+
+    await uploadTask.then(async (onFufilled) => {
+      await onFufilled.ref.getDownloadURL();
+    });
+  };
+
+  const addBookmark = async (e: FormEvent) => {
     e.preventDefault();
-    bookmarksRef.add({ title: title, url: url, category: category });
+    setAddingBookmark(false);
+    //! clear all add bookmark fields
+
+    console.log("==========UPLOADING THUMBNAIL=============");
+    uploadThumbnail()
+      .then(() => {
+        console.log("==========THUMBNAIL UPLOADED=============");
+        // console.log("returned ", imgUrl);
+        // setImgUrl(imgUrl);
+
+        console.log("adding bookmark:");
+        console.log(`Title: ${title}`);
+        console.log(`URL: ${url}`);
+        console.log(`Category: ${category}`);
+        console.log(`Img Url: ${imgUrl}`);
+
+        bookmarksRef
+          .add({
+            title: title,
+            url: url,
+            category: category,
+            imgUrl: imgUrl,
+          })
+          .then((bookmark) => {
+            console.log("bookmark added");
+            // ref.put(image).then((snapshot) => {
+            //   console.log("Uploaded a blob or file!");
+            // });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    // console.log("uploaded thumbnail - adding bookmark");
   };
 
   useEffect(() => {
