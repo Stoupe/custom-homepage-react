@@ -8,29 +8,16 @@ import {
   DialogTitle,
   makeStyles,
   TextField,
-  ThemeProvider,
   Typography,
 } from "@material-ui/core";
+import firebase from "firebase/app";
+import "firebase/storage";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
-import firebase from "firebase/app";
-import "firebase/storage";
-import { title } from "node:process";
-import { url } from "node:inspector";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    // display: "flex",
-    // flexDirection: "column",
-    // margin: "5rem",
-  },
-  // title: {
-  //   "& > *": {
-  //     paddingTop: theme.spacing(1),
-  //     paddingBottom: theme.spacing(1),
-  //   },
-  // },
+  root: {},
   input: {
     // margin: "3rem",
     "& > div": {
@@ -61,8 +48,8 @@ const AddBookmarkDialog = ({
   const [title, setTitle] = useState("Test");
   const [url, setUrl] = useState("https://example.com");
   const [category, setCategory] = useState("General");
-  const [image, setImage] = useState();
-  const [imgUrl, setImgUrl] = useState<any>();
+  const [image, setImage] = useState<File>();
+  const [imgBlobUrl, setImgBlobUrl] = useState<string | ArrayBuffer>();
 
   const classes = useStyles();
 
@@ -75,21 +62,24 @@ const AddBookmarkDialog = ({
 
   const [bookmarkCategories, setBookmarkCategories] = useState([]);
 
-  const handleImageUpload = (e) => {
-    const image = e.target.files[0];
+  const handleImageUpload = (e: FormEvent) => {
+    let image = (e.target as HTMLInputElement).files[0];
+
     setImage(image);
 
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onload = () => {
-      setImgUrl(reader.result);
+      setImgBlobUrl(reader.result);
     };
   };
 
   const uploadThumbnail = async () => {
+    let response: Promise<any>;
     const storageRef = firebase.storage().ref();
-
-    const uploadTask = storageRef.child(`images/${title}-${url}`).put(image);
+    const uploadTask = storageRef
+      .child(`images/${user.uid}/${image.name}`)
+      .put(image);
     console.log("created upload task");
 
     uploadTask.on(
@@ -109,13 +99,16 @@ const AddBookmarkDialog = ({
       },
       (error) => {
         console.log(error);
-        return Promise.reject(error);
+        // return Promise.reject(error);
+        response = Promise.reject(error);
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((dlUrl: string) => {
           console.log("Download URL: ", dlUrl);
-          setImgUrl("" + dlUrl);
-          return Promise.resolve();
+          // setImgDownloadUrl(dlUrl);
+          // console.log("imgDownloadUrl:", imgDownloadUrl);
+          response = Promise.resolve(dlUrl);
+
           // downloadURL = dlUrl;
 
           // return Promise.resolve(dlUrl);
@@ -128,6 +121,8 @@ const AddBookmarkDialog = ({
     await uploadTask.then(async (onFufilled) => {
       await onFufilled.ref.getDownloadURL();
     });
+
+    return response;
   };
 
   const addBookmark = async (e: FormEvent) => {
@@ -137,23 +132,23 @@ const AddBookmarkDialog = ({
 
     console.log("==========UPLOADING THUMBNAIL=============");
     uploadThumbnail()
-      .then(() => {
+      .then((dlUrl: string) => {
         console.log("==========THUMBNAIL UPLOADED=============");
-        // console.log("returned ", imgUrl);
+        console.log("returned ", dlUrl);
         // setImgUrl(imgUrl);
 
         console.log("adding bookmark:");
         console.log(`Title: ${title}`);
         console.log(`URL: ${url}`);
         console.log(`Category: ${category}`);
-        console.log(`Img Url: ${imgUrl}`);
+        console.log(`Img Download Url: ${dlUrl}`);
 
         bookmarksRef
           .add({
             title: title,
             url: url,
             category: category,
-            imgUrl: imgUrl,
+            imgDownloadUrl: dlUrl,
           })
           .then((bookmark) => {
             console.log("bookmark added");
@@ -225,10 +220,10 @@ const AddBookmarkDialog = ({
             Upload Image
             <input type="file" hidden required onChange={handleImageUpload} />
           </Button>
-          {imgUrl && (
+          {imgBlobUrl && (
             <Box className={classes.thumbnail}>
               <img
-                src={imgUrl}
+                src={imgBlobUrl as string}
                 alt="uploaded bookmark thumbnail"
                 width="100px"
               ></img>

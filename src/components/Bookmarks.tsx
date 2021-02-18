@@ -1,4 +1,4 @@
-import { CircularProgress, makeStyles } from "@material-ui/core";
+import { Card, CardContent, makeStyles, Typography } from "@material-ui/core";
 import React, { useContext, useEffect } from "react";
 import { useFirebase } from "../functions/firebase";
 import BookmarkCategory from "./BookmarkCategory";
@@ -6,6 +6,14 @@ import { BookmarksContext, UserContext } from "./Contexts";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+  noBookmarksContainer: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  noBookmarks: {
+    marginTop: theme.spacing(2),
+  },
 }));
 
 const Bookmarks: React.FC = (): JSX.Element => {
@@ -54,18 +62,29 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  if (!bookmarks) return null;
+  // if (Object.keys(bookmarks).length === 0) return null;
 
   return (
-    <>
+    <div className={classes.root}>
       {/* TODO: Form validation, sumbit on enter, reset values on enter, no duplicates, auto update categories */}
 
-      {Object.keys(bookmarks).length === 0 && <CircularProgress />}
+      {Object.keys(bookmarks).length === 0 && (
+        <div className={classes.noBookmarksContainer}>
+          <Card className={classes.noBookmarks}>
+            <CardContent>
+              <Typography variant="h5">No Bookmarks Found</Typography>
+              <Typography variant="body1">
+                Add bookmarks with the + icon in the bottom right corner
+              </Typography>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {Object.entries(bookmarks).map(([key, value]) => {
         return <BookmarkCategory key={key} category={key} bookmarks={value} />;
       })}
-    </>
+    </div>
   );
 };
 

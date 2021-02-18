@@ -13,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#eee",
   },
   title: {
+    marginTop: theme.spacing(1),
     textAlign: "center",
   },
 }));
@@ -29,9 +30,9 @@ const BookmarkCategory = ({
 
   return (
     <div className={classes.root}>
-      <Typography variant="h5" className={classes.title}>
-        {category}
-      </Typography>
+      <div className={classes.title}>
+        <Typography variant="h5">{category}</Typography>
+      </div>
       <Box className={classes.container}>
         <Grid container justifyContent="center">
           <Grid item>
@@ -42,7 +43,7 @@ const BookmarkCategory = ({
                     key={key}
                     title={value.title}
                     url={value.url}
-                    img={value.imgUrl}
+                    img={value.imgDownloadUrl}
                   />
                 );
               })}
