@@ -2,14 +2,20 @@ import {
   Autocomplete,
   Box,
   Button,
+  ButtonGroup,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  ImageList,
+  ImageListItem,
   makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
+import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import DeleteIcon from "@material-ui/icons/Delete";
+import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import firebase from "firebase/app";
 import "firebase/storage";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
@@ -35,6 +41,15 @@ const useStyles = makeStyles((theme) => ({
   thumbnail: {
     border: "5px solid #ccc",
     borderRadius: "1rem",
+
+    // width: "50px",
+    // padding: ".2rem",
+    marginBottom: theme.spacing(1),
+  },
+  centered: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 }));
 
@@ -46,10 +61,12 @@ const AddBookmarkDialog = ({
   const { bookmarks, setBookmarks } = useContext(BookmarksContext);
 
   const [title, setTitle] = useState("Test");
-  const [url, setUrl] = useState("https://example.com");
+  const [url, setUrl] = useState("https://google.com");
   const [category, setCategory] = useState("General");
   const [image, setImage] = useState<File>();
   const [imgBlobUrl, setImgBlobUrl] = useState<string | ArrayBuffer>();
+
+  const [existingImage, setExistingImage] = useState(true);
 
   const classes = useStyles();
 
@@ -61,6 +78,8 @@ const AddBookmarkDialog = ({
     .collection("bookmarks");
 
   const [bookmarkCategories, setBookmarkCategories] = useState([]);
+
+  const [choosingExistingImage, setChoosingExistingImage] = useState(false);
 
   const handleImageUpload = (e: FormEvent) => {
     let image = (e.target as HTMLInputElement).files[0];
@@ -105,15 +124,7 @@ const AddBookmarkDialog = ({
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((dlUrl: string) => {
           console.log("Download URL: ", dlUrl);
-          // setImgDownloadUrl(dlUrl);
-          // console.log("imgDownloadUrl:", imgDownloadUrl);
           response = Promise.resolve(dlUrl);
-
-          // downloadURL = dlUrl;
-
-          // return Promise.resolve(dlUrl);
-          // setImgUrl();
-          // return Promise.resolve(downloadURL.toString());
         });
       }
     );
@@ -125,46 +136,130 @@ const AddBookmarkDialog = ({
     return response;
   };
 
+  const itemData = [
+    {
+      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
+      title: "Breakfast",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
+      title: "Burger",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
+      title: "Camera",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
+      title: "Coffee",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
+      title: "Hats",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
+      title: "Honey",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
+      title: "Basketball",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
+      title: "Fern",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
+      title: "Mushrooms",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
+      title: "Tomato basil",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
+      title: "Sea star",
+    },
+    {
+      img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
+      title: "Bike",
+    },
+  ];
+
+  //TODO: get thumbnails from storage
+  const [existingThumbnails, setExistingThumbnails] = useState<string[]>([]);
+  const getExistingThumbnails = async () => {
+    const storageRef = firebase.storage().ref().child(`images/${user.uid}`);
+
+    storageRef
+      .listAll()
+      .then(async (value) => {
+        console.log(value.items.length);
+        let tempImageUrls = [];
+        await value.items.forEach(async (item) => {
+          tempImageUrls.push(await item.getDownloadURL());
+          // console.log(await item.getDownloadURL());
+        });
+        setExistingThumbnails(tempImageUrls);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getExistingThumbnails();
+  }, [bookmarks]);
+
+  const clearFormFields = () => {
+    setTitle("");
+    setUrl("");
+    setCategory("");
+    setImage(null);
+    setImgBlobUrl("");
+  };
+
   const addBookmark = async (e: FormEvent) => {
     e.preventDefault();
     setAddingBookmark(false);
+    clearFormFields();
     //! clear all add bookmark fields
 
     console.log("==========UPLOADING THUMBNAIL=============");
-    uploadThumbnail()
-      .then((dlUrl: string) => {
-        console.log("==========THUMBNAIL UPLOADED=============");
-        console.log("returned ", dlUrl);
-        // setImgUrl(imgUrl);
 
-        console.log("adding bookmark:");
-        console.log(`Title: ${title}`);
-        console.log(`URL: ${url}`);
-        console.log(`Category: ${category}`);
-        console.log(`Img Download Url: ${dlUrl}`);
+    if (!existingImage) {
+      try {
+        const uploadedThumbnailUrl = await uploadThumbnail();
 
         bookmarksRef
           .add({
             title: title,
             url: url,
             category: category,
-            imgDownloadUrl: dlUrl,
+            imgDownloadUrl: uploadedThumbnailUrl,
           })
           .then((bookmark) => {
             console.log("bookmark added");
-            // ref.put(image).then((snapshot) => {
-            //   console.log("Uploaded a blob or file!");
-            // });
           })
           .catch((err) => {
             console.log(err);
           });
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log(err);
-      });
-
-    // console.log("uploaded thumbnail - adding bookmark");
+      }
+    } else {
+      bookmarksRef
+        .add({
+          title: title,
+          url: url,
+          category: category,
+          imgDownloadUrl: imgBlobUrl,
+        })
+        .then((bookmark) => {
+          console.log("bookmark added");
+        });
+    }
   };
 
   useEffect(() => {
@@ -176,6 +271,7 @@ const AddBookmarkDialog = ({
 
   return (
     <Dialog
+      maxWidth="xs"
       className={classes.root}
       open={addingBookmark}
       onClose={() => {
@@ -183,17 +279,16 @@ const AddBookmarkDialog = ({
       }}
     >
       <DialogTitle>New Bookmark</DialogTitle>
-      <form onSubmit={addBookmark}>
+      <form onSubmit={addBookmark} noValidate>
         <DialogContent>
           <TextField
             className={classes.input}
-            autoFocus
+            // autoFocus
             label="Title"
             type="text"
             fullWidth
             // margin="dense"
             value={title}
-            required
             onChange={(e) => {
               setTitle(e.target.value);
             }}
@@ -205,30 +300,102 @@ const AddBookmarkDialog = ({
             fullWidth
             // margin="normal"
             value={url}
-            required
             onChange={(e) => {
               setUrl(e.target.value);
             }}
           />
 
-          {/* ====================== */}
+          {/* ==========SELECT THUMBNAIL IMAGE============ */}
 
-          <Typography variant="subtitle1">
-            Upload or select image here
-          </Typography>
-          <Button variant="contained" component="label">
-            Upload Image
-            <input type="file" hidden required onChange={handleImageUpload} />
-          </Button>
-          {imgBlobUrl && (
-            <Box className={classes.thumbnail}>
-              <img
-                src={imgBlobUrl as string}
-                alt="uploaded bookmark thumbnail"
-                width="100px"
-              ></img>
-            </Box>
-          )}
+          <Typography variant="caption">Thumbnail</Typography>
+
+          <Box className={classes.centered}>
+            {imgBlobUrl && (
+              <Box className={classes.thumbnail}>
+                {/* TODO: Click the image to crop */}
+                <Button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                  }}
+                >
+                  <img
+                    alt="thumbnail"
+                    width="60rem"
+                    height="60rem"
+                    src={imgBlobUrl as string}
+                  />
+                </Button>
+              </Box>
+            )}
+
+            <ButtonGroup
+              variant="contained"
+              color="primary"
+              aria-label="contained primary button group"
+            >
+              <Button
+                variant="contained"
+                component="label"
+                startIcon={<CloudUploadIcon />}
+              >
+                Upload
+                <input type="file" hidden onChange={handleImageUpload} />
+              </Button>
+
+              <Button
+                variant="contained"
+                component="label"
+                startIcon={<PhotoLibraryIcon />}
+                onClick={(e) => {
+                  setChoosingExistingImage((prevState) => !prevState);
+                }}
+              >
+                Browse
+              </Button>
+
+              <Button
+                variant="contained"
+                component="label"
+                startIcon={<DeleteIcon />}
+                onClick={(e) => {
+                  setImage(null);
+                  setImgBlobUrl(null);
+                }}
+              >
+                Remove
+              </Button>
+            </ButtonGroup>
+
+            {choosingExistingImage && (
+              <Box>
+                <Dialog
+                  open={choosingExistingImage}
+                  onClose={() => setChoosingExistingImage(false)}
+                >
+                  <DialogTitle>Choose Image</DialogTitle>
+                  <DialogContent>
+                    <ImageList cols={3}>
+                      {existingThumbnails.map((item) => (
+                        <ImageListItem key={item}>
+                          <Button
+                            onClick={() => {
+                              // setImage();
+                              setExistingImage(true);
+                              setImgBlobUrl(item);
+                              setChoosingExistingImage(false);
+                            }}
+                          >
+                            <img src={item} width={"80rem"} alt="" />
+                          </Button>
+                        </ImageListItem>
+                      ))}
+                    </ImageList>
+                  </DialogContent>
+                </Dialog>
+              </Box>
+            )}
+          </Box>
 
           {/* ===================== */}
 
@@ -239,7 +406,6 @@ const AddBookmarkDialog = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                required
                 label="Category"
                 value={category}
                 onChange={(e) => {

@@ -1,18 +1,17 @@
 import {
-  makeStyles,
   AppBar,
-  Toolbar,
+  Button,
   IconButton,
-  Typography,
+  makeStyles,
   Menu,
   MenuItem,
-  Button,
+  Toolbar,
+  Typography,
 } from "@material-ui/core";
 import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
-import MenuIcon from "@material-ui/icons/Menu";
-import { UserContext } from "./Contexts";
 import { logInWithGoogle, logOut } from "../functions/auth";
+import { UserContext } from "./Contexts";
 
 const useStyles = makeStyles((theme) => ({
   root: {
