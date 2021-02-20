@@ -1,16 +1,11 @@
-import { Button, Container, Fab, makeStyles, styled } from "@material-ui/core";
+import { Container, Fab } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import AddIcon from "@material-ui/icons/Add";
-import React, { useContext, useEffect, useState } from "react";
-import { useFirebase } from "../functions/firebase";
+import React, { useContext, useState } from "react";
 import AddBookmarkDialog from "./AddBookmarkDialog";
 import Bookmarks from "./Bookmarks";
-import { BookmarksContext, UserContext } from "./Contexts";
+import { UserContext } from "./Contexts";
 import Header from "./Header";
-
-// Fix for MUIv5 ButtonBase styles overriding Fab styles
-// const Fab = styled(MuiFab)({
-//   borderRadius: "50%",
-// });
 
 const useStyles = makeStyles((theme) => ({
   fab: {

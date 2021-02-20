@@ -2,12 +2,12 @@ import {
   AppBar,
   Button,
   IconButton,
-  makeStyles,
   Menu,
   MenuItem,
   Toolbar,
   Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";

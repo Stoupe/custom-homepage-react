@@ -9,10 +9,10 @@ import {
   DialogTitle,
   ImageList,
   ImageListItem,
-  makeStyles,
   TextField,
   Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";

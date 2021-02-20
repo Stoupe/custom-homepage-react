@@ -3,10 +3,10 @@ import {
   ButtonBase,
   Grid,
   Grow,
-  makeStyles,
   Tooltip,
   Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useEffect } from "react";
 
 // const scrapFavicon = require("scrap-favicon");

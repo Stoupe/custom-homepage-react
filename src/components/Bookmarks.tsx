@@ -2,9 +2,9 @@ import {
   Card,
   CardContent,
   CircularProgress,
-  makeStyles,
   Typography,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import BookmarkCategory from "./BookmarkCategory";
