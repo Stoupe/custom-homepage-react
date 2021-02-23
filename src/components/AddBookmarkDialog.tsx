@@ -66,7 +66,8 @@ const AddBookmarkDialog = ({
   const [image, setImage] = useState<File>();
   const [imgBlobUrl, setImgBlobUrl] = useState<string | ArrayBuffer>();
 
-  const [existingImage, setExistingImage] = useState(true);
+  const [choosingExistingImage, setChoosingExistingImage] = useState(false);
+  const [usingExistingImage, setUsingExistingImage] = useState(true);
 
   const classes = useStyles();
 
@@ -79,17 +80,15 @@ const AddBookmarkDialog = ({
 
   const [bookmarkCategories, setBookmarkCategories] = useState([]);
 
-  const [choosingExistingImage, setChoosingExistingImage] = useState(false);
-
   const handleImageUpload = (e: FormEvent) => {
     let image = (e.target as HTMLInputElement).files[0];
-
     setImage(image);
 
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onload = () => {
       setImgBlobUrl(reader.result);
+      setUsingExistingImage(false);
     };
   };
 
@@ -136,58 +135,6 @@ const AddBookmarkDialog = ({
     return response;
   };
 
-  const itemData = [
-    {
-      img: "https://images.unsplash.com/photo-1551963831-b3b1ca40c98e",
-      title: "Breakfast",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1551782450-a2132b4ba21d",
-      title: "Burger",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1522770179533-24471fcdba45",
-      title: "Camera",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c",
-      title: "Coffee",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1533827432537-70133748f5c8",
-      title: "Hats",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62",
-      title: "Honey",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1516802273409-68526ee1bdd6",
-      title: "Basketball",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1518756131217-31eb79b20e8f",
-      title: "Fern",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1597645587822-e99fa5d45d25",
-      title: "Mushrooms",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1567306301408-9b74779a11af",
-      title: "Tomato basil",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1471357674240-e1a485acb3e1",
-      title: "Sea star",
-    },
-    {
-      img: "https://images.unsplash.com/photo-1589118949245-7d38baf380d6",
-      title: "Bike",
-    },
-  ];
-
-  //TODO: get thumbnails from storage
   const [existingThumbnails, setExistingThumbnails] = useState<string[]>([]);
   const getExistingThumbnails = async () => {
     const storageRef = firebase.storage().ref().child(`images/${user.uid}`);
@@ -197,7 +144,7 @@ const AddBookmarkDialog = ({
       .then(async (value) => {
         console.log(value.items.length);
         let tempImageUrls = [];
-        await value.items.forEach(async (item) => {
+        value.items.forEach(async (item) => {
           tempImageUrls.push(await item.getDownloadURL());
           // console.log(await item.getDownloadURL());
         });
@@ -226,9 +173,8 @@ const AddBookmarkDialog = ({
     clearFormFields();
     //! clear all add bookmark fields
 
-    console.log("==========UPLOADING THUMBNAIL=============");
-
-    if (!existingImage) {
+    if (!usingExistingImage) {
+      console.log("==========UPLOADING THUMBNAIL=============");
       try {
         const uploadedThumbnailUrl = await uploadThumbnail();
 
@@ -262,6 +208,9 @@ const AddBookmarkDialog = ({
     }
   };
 
+  /**
+   * Parse all existing bookmark categories every time the bookmarks are changed
+   */
   useEffect(() => {
     Object.values(bookmarks).forEach((category: Record<string, any>) => {
       const categoryName = Object.values(category).pop().category;
@@ -347,8 +296,8 @@ const AddBookmarkDialog = ({
                 variant="contained"
                 component="label"
                 startIcon={<PhotoLibraryIcon />}
-                onClick={(e) => {
-                  setChoosingExistingImage((prevState) => !prevState);
+                onClick={() => {
+                  setChoosingExistingImage(true);
                 }}
               >
                 Browse
@@ -368,32 +317,32 @@ const AddBookmarkDialog = ({
             </ButtonGroup>
 
             {choosingExistingImage && (
-              <Box>
-                <Dialog
-                  open={choosingExistingImage}
-                  onClose={() => setChoosingExistingImage(false)}
-                >
-                  <DialogTitle>Choose Image</DialogTitle>
-                  <DialogContent>
-                    <ImageList cols={3}>
-                      {existingThumbnails.map((item) => (
-                        <ImageListItem key={item}>
-                          <Button
-                            onClick={() => {
-                              // setImage();
-                              setExistingImage(true);
-                              setImgBlobUrl(item);
-                              setChoosingExistingImage(false);
-                            }}
-                          >
-                            <img src={item} width={"80rem"} alt="" />
-                          </Button>
-                        </ImageListItem>
-                      ))}
-                    </ImageList>
-                  </DialogContent>
-                </Dialog>
-              </Box>
+              // <Box>
+              <Dialog
+                open={choosingExistingImage}
+                onClose={() => setChoosingExistingImage(false)}
+              >
+                <DialogTitle>Choose Image</DialogTitle>
+                <DialogContent>
+                  <ImageList cols={3}>
+                    {existingThumbnails.map((item) => (
+                      <ImageListItem key={item}>
+                        <Button
+                          onClick={() => {
+                            setImage(null);
+                            setImgBlobUrl(item);
+                            setUsingExistingImage(true);
+                            setChoosingExistingImage(false);
+                          }}
+                        >
+                          <img src={item} width={"80rem"} alt="" />
+                        </Button>
+                      </ImageListItem>
+                    ))}
+                  </ImageList>
+                </DialogContent>
+              </Dialog>
+              // </Box>
             )}
           </Box>
 
