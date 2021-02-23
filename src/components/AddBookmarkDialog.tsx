@@ -19,8 +19,10 @@ import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
 import firebase from "firebase/app";
 import "firebase/storage";
 import React, { FormEvent, useContext, useEffect, useState } from "react";
+import { addNewBookmark } from "../functions/bookmarkFunctions";
 import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
+import { FirebaseBookmark } from "./Types";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -56,32 +58,43 @@ const useStyles = makeStyles((theme) => ({
 /**
  * TODO: Ensure thumbnail URL is the proper URL, verify this with testing
  */
-const AddBookmarkDialog = ({
-  addingBookmark,
-  setAddingBookmark,
-}): JSX.Element => {
+const AddBookmarkDialog = (): JSX.Element => {
   const { user } = useContext(UserContext);
-  const { bookmarks, setBookmarks } = useContext(BookmarksContext);
+  const { bookmarks, addingBookmark, setAddingBookmark } = useContext(
+    BookmarksContext
+  );
 
-  const [title, setTitle] = useState("Test");
-  const [url, setUrl] = useState("https://google.com");
-  const [category, setCategory] = useState("General");
+  const [newBookmark, setNewBookmark] = useState<FirebaseBookmark>({
+    title: "",
+    url: "",
+    category: "",
+    thumbnailUrl: "",
+  });
+
+  // const [title, setTitle] = useState<string>("");
+  // const [url, setUrl] = useState<string>("");
+  // const [category, setCategory] = useState<string>("");
   const [image, setImage] = useState<File>();
-  const [imgBlobUrl, setImgBlobUrl] = useState<string | ArrayBuffer>();
-
-  const [choosingExistingImage, setChoosingExistingImage] = useState(false);
-  const [usingExistingImage, setUsingExistingImage] = useState(true);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<
+    string | ArrayBuffer
+  >();
+  const [choosingExistingImage, setChoosingExistingImage] = useState<boolean>(
+    false
+  );
+  const [thumbnailUploaded, setThumbnailUploaded] = useState<boolean>(false);
+  const [bookmarkCategories, setBookmarkCategories] = useState<Array<string>>(
+    []
+  );
 
   const classes = useStyles();
 
-  const db = useFirebase();
-
-  const bookmarksRef = db
+  const storageRef = firebase.storage().ref();
+  const bookmarksRef = useFirebase()
     .collection("users")
     .doc(user.uid)
     .collection("bookmarks");
 
-  const [bookmarkCategories, setBookmarkCategories] = useState([]);
+  //* ========================= FUNCTIONS ==============================
 
   const handleImageUpload = (e: FormEvent) => {
     let image = (e.target as HTMLInputElement).files[0];
@@ -90,14 +103,19 @@ const AddBookmarkDialog = ({
     const reader = new FileReader();
     reader.readAsDataURL(image);
     reader.onload = () => {
-      setImgBlobUrl(reader.result);
-      setUsingExistingImage(false);
+      const localUrl = reader.result;
+      setThumbnailPreviewUrl(localUrl);
+      setNewBookmark((prevState) => ({
+        ...prevState,
+        thumbnailUrl: null,
+      }));
+      setThumbnailUploaded(true);
     };
   };
 
-  const uploadThumbnail = async () => {
-    let response: Promise<any>;
-    const storageRef = firebase.storage().ref();
+  const uploadThumbnailToFirebase = async () => {
+    let response: Promise<string>;
+
     const uploadTask = storageRef
       .child(`images/${user.uid}/${image.name}`)
       .put(image);
@@ -121,7 +139,7 @@ const AddBookmarkDialog = ({
       (error) => {
         console.log(error);
         // return Promise.reject(error);
-        response = Promise.reject(error);
+        response = Promise.reject(error.message);
       },
       () => {
         uploadTask.snapshot.ref.getDownloadURL().then((dlUrl: string) => {
@@ -139,6 +157,7 @@ const AddBookmarkDialog = ({
   };
 
   const [existingThumbnails, setExistingThumbnails] = useState<string[]>([]);
+
   const getExistingThumbnails = async () => {
     const storageRef = firebase.storage().ref().child(`images/${user.uid}`);
 
@@ -163,52 +182,39 @@ const AddBookmarkDialog = ({
   }, [bookmarks]);
 
   const clearFormFields = () => {
-    setTitle("");
-    setUrl("");
-    setCategory("");
+    setNewBookmark({
+      title: "",
+      url: "",
+      category: "",
+      thumbnailUrl: "",
+    });
     setImage(null);
-    setImgBlobUrl("");
+    setThumbnailPreviewUrl("");
   };
 
-  const addBookmark = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setAddingBookmark(false);
     clearFormFields();
-    //! clear all add bookmark fields
 
-    if (!usingExistingImage) {
-      console.log("==========UPLOADING THUMBNAIL=============");
-      try {
-        const uploadedThumbnailUrl = await uploadThumbnail();
-
-        bookmarksRef
-          .add({
-            title: title,
-            url: url,
-            category: category,
-            imgDownloadUrl: uploadedThumbnailUrl,
-          })
-          .then((bookmark) => {
-            console.log("bookmark added");
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } catch (err) {
-        console.log(err);
+    try {
+      if (thumbnailUploaded) {
+        await uploadThumbnailToFirebase();
       }
-    } else {
-      bookmarksRef
-        .add({
-          title: title,
-          url: url,
-          category: category,
-          imgDownloadUrl: imgBlobUrl,
-        })
-        .then((bookmark) => {
-          console.log("bookmark added");
-        });
+      addNewBookmark(bookmarksRef, newBookmark);
+    } catch (err) {
+      console.log(err);
     }
+  };
+
+  const removeThumbnail = () => {
+    setImage(null);
+    setThumbnailPreviewUrl(null);
+    setNewBookmark((prevState) => ({
+      ...prevState,
+      thumbnailUrl: null,
+    }));
+    setThumbnailUploaded(false);
   };
 
   /**
@@ -221,6 +227,8 @@ const AddBookmarkDialog = ({
     });
   }, [bookmarks]);
 
+  //* ========================= RETURN ==============================
+
   return (
     <Dialog
       maxWidth="xs"
@@ -231,18 +239,20 @@ const AddBookmarkDialog = ({
       }}
     >
       <DialogTitle>New Bookmark</DialogTitle>
-      <form onSubmit={addBookmark} noValidate>
+      <form onSubmit={handleSubmit} noValidate>
         <DialogContent>
           <TextField
             className={classes.input}
-            // autoFocus
+            autoFocus
             label="Title"
             type="text"
             fullWidth
-            // margin="dense"
-            value={title}
+            value={newBookmark.title}
             onChange={(e) => {
-              setTitle(e.target.value);
+              setNewBookmark((prevState) => ({
+                ...prevState,
+                title: e.target.value,
+              }));
             }}
           />
           <TextField
@@ -251,18 +261,18 @@ const AddBookmarkDialog = ({
             type="url"
             fullWidth
             // margin="normal"
-            value={url}
+            value={newBookmark.url}
             onChange={(e) => {
-              setUrl(e.target.value);
+              setNewBookmark((prevState) => ({
+                ...prevState,
+                url: e.target.value,
+              }));
             }}
           />
-
           {/* ==========SELECT THUMBNAIL IMAGE============ */}
-
           <Typography variant="caption">Thumbnail</Typography>
-
           <Box className={classes.centered}>
-            {imgBlobUrl && (
+            {thumbnailPreviewUrl && (
               <Box className={classes.thumbnail}>
                 {/* TODO: Click the image to crop */}
                 <Button
@@ -275,7 +285,7 @@ const AddBookmarkDialog = ({
                     alt="thumbnail"
                     width="60rem"
                     height="60rem"
-                    src={imgBlobUrl as string}
+                    src={thumbnailPreviewUrl as string}
                   />
                 </Button>
               </Box>
@@ -310,10 +320,7 @@ const AddBookmarkDialog = ({
                 variant="contained"
                 component="label"
                 startIcon={<DeleteIcon />}
-                onClick={(e) => {
-                  setImage(null);
-                  setImgBlobUrl(null);
-                }}
+                onClick={removeThumbnail}
               >
                 Remove
               </Button>
@@ -328,17 +335,20 @@ const AddBookmarkDialog = ({
                 <DialogTitle>Choose Image</DialogTitle>
                 <DialogContent>
                   <ImageList cols={3}>
-                    {existingThumbnails.map((item) => (
-                      <ImageListItem key={item}>
+                    {existingThumbnails.map((itemUrl) => (
+                      <ImageListItem key={itemUrl}>
                         <Button
                           onClick={() => {
-                            setImage(null);
-                            setImgBlobUrl(item);
-                            setUsingExistingImage(true);
+                            removeThumbnail();
+                            setThumbnailPreviewUrl(itemUrl);
+                            setNewBookmark((prevState) => ({
+                              ...prevState,
+                              thumbnailUrl: itemUrl,
+                            }));
                             setChoosingExistingImage(false);
                           }}
                         >
-                          <img src={item} width={"80rem"} alt="" />
+                          <img src={itemUrl} width={"80rem"} alt="" />
                         </Button>
                       </ImageListItem>
                     ))}
@@ -348,21 +358,30 @@ const AddBookmarkDialog = ({
               // </Box>
             )}
           </Box>
-
           {/* ===================== */}
-
           <Autocomplete
             freeSolo
             className={classes.autocomplete}
             options={bookmarkCategories}
+            value={newBookmark.category}
+            inputValue={newBookmark.category}
+            onChange={(e, newValue) => {
+              setNewBookmark((prevState) => ({
+                ...prevState,
+                category: newValue,
+              }));
+            }}
+            // onInputChange={(e, newInputValue) => {
+            //   setNewBookmark((prevState) => ({
+            //     ...prevState,
+            //     category: newInputValue,
+            //   }));
+            // }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Category"
-                value={category}
-                onChange={(e) => {
-                  setCategory(e.target.value);
-                }}
+                // value={newBookmark.category}
               />
             )}
           />

@@ -19,11 +19,22 @@ const Main = () => {
   );
 
   const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
+  const [addingBookmark, setAddingBookmark] = useState<boolean>(false);
+  const [editingBookmarks, setEditingBookmarks] = useState<boolean>(false);
 
   return (
     <React.StrictMode>
       <UserContext.Provider value={{ user, setUser }}>
-        <BookmarksContext.Provider value={{ bookmarks, setBookmarks }}>
+        <BookmarksContext.Provider
+          value={{
+            bookmarks,
+            setBookmarks,
+            addingBookmark,
+            setAddingBookmark,
+            editingBookmarks,
+            setEditingBookmarks,
+          }}
+        >
           <StylesProvider injectFirst>
             <App />
           </StylesProvider>

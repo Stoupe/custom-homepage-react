@@ -4,7 +4,7 @@ import AddIcon from "@material-ui/icons/Add";
 import React, { useContext, useState } from "react";
 import AddBookmarkDialog from "./AddBookmarkDialog";
 import Bookmarks from "./Bookmarks";
-import { UserContext } from "./Contexts";
+import { BookmarksContext, UserContext } from "./Contexts";
 import Header from "./Header";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,9 +16,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const App = () => {
-  const { user, setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  const [addingBookmark, setAddingBookmark] = useState(false);
+  const { setAddingBookmark } = useContext(BookmarksContext);
+
+  // const [addingBookmark, setAddingBookmark] = useState(false);
 
   const styles = useStyles();
 
@@ -42,10 +44,7 @@ const App = () => {
             </Fab>
           </div>
 
-          <AddBookmarkDialog
-            addingBookmark={addingBookmark} //! remove "|| true", temp for development
-            setAddingBookmark={setAddingBookmark}
-          />
+          <AddBookmarkDialog />
         </>
       )}
     </div>
