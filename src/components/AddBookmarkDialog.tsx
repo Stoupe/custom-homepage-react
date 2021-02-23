@@ -53,6 +53,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+/**
+ * TODO: Ensure thumbnail URL is the proper URL, verify this with testing
+ */
 const AddBookmarkDialog = ({
   addingBookmark,
   setAddingBookmark,

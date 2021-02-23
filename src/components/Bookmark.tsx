@@ -15,9 +15,9 @@ import React, { useEffect } from "react";
 const useStyles = makeStyles((theme) => ({
   box: {
     boxSizing: "border-box",
-    width: "6rem",
-    height: "6rem",
-    padding: "0.2rem",
+    width: "5.5rem",
+    height: "5.5rem",
+    // padding: "0.2rem",
     borderRadius: "1.5rem",
     border: "0.5rem solid #ddd",
   },
@@ -30,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
   logo: {
     width: "100%",
     height: "100%",
+    borderRadius: "1rem",
   },
 }));
 
