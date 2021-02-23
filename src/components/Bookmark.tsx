@@ -83,15 +83,17 @@ const Bookmark = ({
               <Typography variant="subtitle2">{title ?? "No Title"}</Typography>
             </ButtonBase>
             {editingBookmarks && (
-              <Box className={classes.removeCircleContainer}>
-                <ButtonBase
-                  onClick={() => {
-                    deleteBookmark(bookmarksRef, uid);
-                  }}
-                >
-                  <RemoveCircleIcon />
-                </ButtonBase>
-              </Box>
+              <Grow in={true}>
+                <Box className={classes.removeCircleContainer}>
+                  <ButtonBase
+                    onClick={() => {
+                      deleteBookmark(bookmarksRef, uid);
+                    }}
+                  >
+                    <RemoveCircleIcon />
+                  </ButtonBase>
+                </Box>
+              </Grow>
             )}
           </Box>
         </Tooltip>
