@@ -11,7 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";
-import { UserContext } from "./Contexts";
+import { BookmarksContext, UserContext } from "./Contexts";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -46,6 +47,8 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const { setEditingBookmarks } = useContext(BookmarksContext);
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -63,12 +66,14 @@ const Header: React.FC = () => {
         {user ? (
           <div>
             <IconButton
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleMenu}
+              onClick={() => {
+                setEditingBookmarks((prevState) => !prevState);
+              }}
               color="inherit"
             >
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={handleMenu} color="inherit">
               <AccountCircle />
             </IconButton>
             <Menu
