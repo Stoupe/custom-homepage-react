@@ -7,6 +7,7 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
+import { useBookmarksRef } from "../functions/useBookmarksRef";
 import BookmarkCategory from "./BookmarkCategory";
 import { BookmarksContext, UserContext } from "./Contexts";
 
@@ -24,16 +25,10 @@ const useStyles = makeStyles((theme) => ({
 
 const Bookmarks: React.FC = (): JSX.Element => {
   const classes = useStyles();
-  const { user } = useContext(UserContext);
   const { bookmarks, setBookmarks } = useContext(BookmarksContext);
   const [loading, setLoading] = useState(true);
 
-  const db = useFirebase();
-
-  const bookmarksRef = db
-    .collection("users")
-    .doc(user.uid)
-    .collection("bookmarks");
+  const bookmarksRef = useBookmarksRef();
 
   /**
    * Set up listener for bookmarks

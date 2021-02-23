@@ -2,6 +2,7 @@ import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Bookmark from "./Bookmark";
 import { makeStyles } from "@material-ui/core/styles";
+import { FirebaseBookmark } from "./Types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,7 +25,7 @@ const BookmarkCategory = ({
   bookmarks,
 }: {
   category: string;
-  bookmarks?: Record<string, any>;
+  bookmarks?: Record<string, FirebaseBookmark>;
 }): JSX.Element => {
   // console.log(bookmarks);
   const classes = useStyles();
@@ -39,14 +40,7 @@ const BookmarkCategory = ({
           <Grid item>
             <Grid container spacing={3} justifyContent="center">
               {Object.entries(bookmarks).map(([key, value]) => {
-                return (
-                  <Bookmark
-                    key={key}
-                    title={value.title}
-                    url={value.url}
-                    img={value.imgDownloadUrl}
-                  />
-                );
+                return <Bookmark key={key} uid={key} bookmark={value} />;
               })}
             </Grid>
           </Grid>

@@ -9,10 +9,12 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import React, { useContext } from "react";
+import { deleteBookmark } from "../functions/bookmarkFunctions";
+import { useBookmarksRef } from "../functions/useBookmarksRef";
 import { BookmarksContext } from "./Contexts";
-
 // const scrapFavicon = require("scrap-favicon");
 // import scrapFavicon from "scrap-favicon";
+import { FirebaseBookmark } from "./Types";
 
 const useStyles = makeStyles((theme) => ({
   bookmarkBox: {
@@ -45,22 +47,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Bookmark = ({
-  title,
-  url,
-  img,
+  uid,
+  bookmark,
 }: {
-  title?: string;
-  url?: string;
-  img?: string;
+  uid: string;
+  bookmark: FirebaseBookmark;
 }) => {
   const classes = useStyles();
+  const { editingBookmarks } = useContext(BookmarksContext);
 
-  const { bookmarks, editingBookmarks } = useContext(BookmarksContext);
-  // const { editing } = bookmarks;
-  // const editing = bookmarks.editing;
-  // const {bookmarkEditingMode, setBookmarkEditingMode} = useContext(BookmarkEditingContext);
-
-  // const [editing, setEditing] = useState(true);
+  const { title, url, thumbnailUrl } = bookmark;
+  const bookmarksRef = useBookmarksRef();
 
   return (
     <Grid item>
@@ -74,11 +71,11 @@ const Bookmark = ({
             <ButtonBase
               disabled={editingBookmarks}
               className={classes.button}
-              href={url}
+              href={url as string}
             >
               <Box className={classes.thumbnail}>
                 <img
-                  src={img ?? "logo192.png"}
+                  src={thumbnailUrl ?? "logo192.png"}
                   alt={title ?? "logo"}
                   className={classes.logo}
                 ></img>
@@ -89,7 +86,7 @@ const Bookmark = ({
               <Box className={classes.removeCircleContainer}>
                 <ButtonBase
                   onClick={() => {
-                    alert("asdf");
+                    deleteBookmark(bookmarksRef, uid);
                   }}
                 >
                   <RemoveCircleIcon />

@@ -22,3 +22,15 @@ export const addNewBookmark = async (
       return Promise.reject(err);
     });
 };
+
+export const deleteBookmark = async (bookmarksRef, bookmarkId: string) => {
+  bookmarksRef
+    .doc(bookmarkId)
+    .delete()
+    .then(() => {
+      return Promise.resolve();
+    })
+    .catch((err) => {
+      return Promise.reject(err);
+    });
+};

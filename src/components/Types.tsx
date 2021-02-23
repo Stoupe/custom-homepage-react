@@ -1,7 +1,7 @@
 export interface FirebaseBookmark {
   title: string;
-  url: URL | string;
+  url: string;
   category: string;
-  thumbnailUrl: URL | string;
+  thumbnailUrl: string;
   position?: number;
 }
