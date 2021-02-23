@@ -164,7 +164,7 @@ const AddBookmarkDialog = (): JSX.Element => {
     storageRef
       .listAll()
       .then(async (value) => {
-        console.log(value.items.length);
+        // console.log(value.items.length);
         let tempImageUrls = [];
         value.items.forEach(async (item) => {
           tempImageUrls.push(await item.getDownloadURL());
@@ -221,10 +221,12 @@ const AddBookmarkDialog = (): JSX.Element => {
    * Parse all existing bookmark categories every time the bookmarks are changed
    */
   useEffect(() => {
+    const tempCategories: string[] = [];
     Object.values(bookmarks).forEach((category: Record<string, any>) => {
       const categoryName = Object.values(category).pop().category;
-      setBookmarkCategories((prevState) => [...prevState, categoryName]);
+      tempCategories.push(categoryName);
     });
+    setBookmarkCategories(tempCategories);
   }, [bookmarks]);
 
   //* ========================= RETURN ==============================
@@ -365,23 +367,23 @@ const AddBookmarkDialog = (): JSX.Element => {
             options={bookmarkCategories}
             value={newBookmark.category}
             inputValue={newBookmark.category}
-            onChange={(e, newValue) => {
-              setNewBookmark((prevState) => ({
-                ...prevState,
-                category: newValue,
-              }));
-            }}
-            // onInputChange={(e, newInputValue) => {
+            // onChange={(e, newValue) => {
             //   setNewBookmark((prevState) => ({
             //     ...prevState,
-            //     category: newInputValue,
+            //     category: newValue,
             //   }));
             // }}
+            onInputChange={(e, newInputValue) => {
+              setNewBookmark((prevState) => ({
+                ...prevState,
+                category: newInputValue,
+              }));
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 label="Category"
-                // value={newBookmark.category}
+                value={newBookmark.category}
               />
             )}
           />
