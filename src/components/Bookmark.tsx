@@ -15,6 +15,7 @@ import { BookmarksContext } from "./Contexts";
 // const scrapFavicon = require("scrap-favicon");
 // import scrapFavicon from "scrap-favicon";
 import { FirebaseBookmark } from "./Types";
+import Image from "material-ui-image";
 
 const useStyles = makeStyles((theme) => ({
   bookmarkBox: {
@@ -22,12 +23,13 @@ const useStyles = makeStyles((theme) => ({
   },
   thumbnail: {
     boxSizing: "border-box",
-    // height: "100%",
     width: "5.5rem",
     height: "5.5rem",
-    // padding: "0.2rem",
     borderRadius: "1.5rem",
     border: "0.5rem solid #ddd",
+    "& > *": {
+      borderRadius: "inherit",
+    },
   },
 
   button: {
@@ -74,11 +76,12 @@ const Bookmark = ({
               href={url as string}
             >
               <Box className={classes.thumbnail}>
-                <img
+                <Image
                   src={thumbnailUrl ?? "logo192.png"}
                   alt={title ?? "logo"}
                   className={classes.logo}
-                ></img>
+                  disableSpinner
+                ></Image>
               </Box>
               <Typography variant="subtitle2">{title ?? "No Title"}</Typography>
             </ButtonBase>

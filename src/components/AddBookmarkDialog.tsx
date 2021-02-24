@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  ButtonBase,
   ButtonGroup,
   Dialog,
   DialogActions,
@@ -23,6 +24,8 @@ import { addNewBookmark } from "../functions/bookmarkFunctions";
 import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
 import { FirebaseBookmark } from "./Types";
+import Image from "material-ui-image";
+import classes from "*.module.css";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -41,12 +44,23 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   thumbnail: {
-    border: "5px solid #ccc",
-    borderRadius: "1rem",
-
-    // width: "50px",
-    // padding: ".2rem",
     marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(0.5),
+    marginRight: theme.spacing(0.5),
+
+    width: "5.5rem",
+    height: "5.5rem",
+    border: "0.5rem solid #ddd",
+    borderRadius: "1.5rem",
+    // position: "flex",
+    boxSizing: "border-box",
+
+    "& > div": {
+      borderRadius: "1rem",
+    },
+  },
+  thumbnailImage: {
+    borderRadius: "1rem",
   },
   centered: {
     display: "flex",
@@ -275,22 +289,25 @@ const AddBookmarkDialog = (): JSX.Element => {
           <Typography variant="caption">Thumbnail</Typography>
           <Box className={classes.centered}>
             {thumbnailPreviewUrl && (
-              <Box className={classes.thumbnail}>
-                {/* TODO: Click the image to crop */}
-                <Button
-                  type="button"
-                  onClick={(e) => {
-                    e.preventDefault();
-                  }}
-                >
-                  <img
+              // <Box className={classes.thumbnail}>
+
+              <ButtonBase
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
+                <Box className={classes.thumbnail}>
+                  <Image
+                    className={classes.thumbnailImage}
                     alt="thumbnail"
-                    width="60rem"
-                    height="60rem"
+                    // width="60rem"
+                    // height="60rem"
+
                     src={thumbnailPreviewUrl as string}
                   />
-                </Button>
-              </Box>
+                </Box>
+              </ButtonBase>
             )}
 
             <ButtonGroup
@@ -339,7 +356,7 @@ const AddBookmarkDialog = (): JSX.Element => {
                   <ImageList cols={3}>
                     {existingThumbnails.map((itemUrl) => (
                       <ImageListItem key={itemUrl}>
-                        <Button
+                        <ButtonBase
                           onClick={() => {
                             removeThumbnail();
                             setThumbnailPreviewUrl(itemUrl);
@@ -350,8 +367,15 @@ const AddBookmarkDialog = (): JSX.Element => {
                             setChoosingExistingImage(false);
                           }}
                         >
-                          <img src={itemUrl} width={"80rem"} alt="" />
-                        </Button>
+                          <Box className={classes.thumbnail}>
+                            <Image
+                              className={classes.thumbnailImage}
+                              src={itemUrl}
+                              // width={"80rem"}
+                              alt=""
+                            />
+                          </Box>
+                        </ButtonBase>
                       </ImageListItem>
                     ))}
                   </ImageList>
