@@ -67,7 +67,7 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  if (loading) return <CircularProgress />;
+  // if (loading) return <CircularProgress />;
 
   return (
     <div className={classes.root}>

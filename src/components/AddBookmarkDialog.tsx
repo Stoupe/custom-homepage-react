@@ -371,8 +371,7 @@ const AddBookmarkDialog = (): JSX.Element => {
                             <Image
                               className={classes.thumbnailImage}
                               src={itemUrl}
-                              // width={"80rem"}
-                              alt=""
+                              disableSpinner
                             />
                           </Box>
                         </ButtonBase>
@@ -391,12 +390,6 @@ const AddBookmarkDialog = (): JSX.Element => {
             options={bookmarkCategories}
             value={newBookmark.category}
             inputValue={newBookmark.category}
-            // onChange={(e, newValue) => {
-            //   setNewBookmark((prevState) => ({
-            //     ...prevState,
-            //     category: newValue,
-            //   }));
-            // }}
             onInputChange={(e, newInputValue) => {
               setNewBookmark((prevState) => ({
                 ...prevState,
