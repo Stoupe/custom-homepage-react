@@ -1,5 +1,6 @@
 import {
   AppBar,
+  Box,
   Button,
   IconButton,
   Menu,
@@ -13,24 +14,20 @@ import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";
 import { BookmarksContext, UserContext } from "./Contexts";
 import EditIcon from "@material-ui/icons/Edit";
+import GitHubIcon from "@material-ui/icons/GitHub";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    flexGrow: 1,
-  },
+  root: {},
+  toolbar: {},
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
   },
-  paper: {
-    width: "5rem",
-    height: "5rem",
-  },
-  outerContainer: {
-    margin: "1rem",
-    padding: "1rem",
+  left: {
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
@@ -50,8 +47,8 @@ const Header: React.FC = () => {
   const { setEditingBookmarks } = useContext(BookmarksContext);
 
   return (
-    <AppBar position="static">
-      <Toolbar>
+    <AppBar position="static" className={classes.root}>
+      <Toolbar className={classes.toolbar}>
         {/* <IconButton
           edge="start"
           className={classes.menuButton}
@@ -60,9 +57,15 @@ const Header: React.FC = () => {
         >
           <MenuIcon />
         </IconButton> */}
-        <Typography variant="h6" className={classes.title} component="div">
+        <Typography variant="h6" className={classes.title}>
           Bookmarks
         </Typography>
+        <IconButton
+          color="inherit"
+          href={"https://github.com/Stoupe/custom-homepage-react"}
+        >
+          <GitHubIcon />
+        </IconButton>
         {user ? (
           <div>
             <IconButton
@@ -73,6 +76,7 @@ const Header: React.FC = () => {
             >
               <EditIcon />
             </IconButton>
+
             <IconButton onClick={handleMenu} color="inherit">
               <AccountCircle />
             </IconButton>
