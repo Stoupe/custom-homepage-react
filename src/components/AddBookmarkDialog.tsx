@@ -127,6 +127,9 @@ const AddBookmarkDialog = (): JSX.Element => {
     };
   };
 
+  /**
+   * Upload the selected thumbnail in 'image' to firebase
+   */
   const uploadThumbnailToFirebase = async () => {
     let response: Promise<string>;
 
@@ -191,10 +194,9 @@ const AddBookmarkDialog = (): JSX.Element => {
       });
   };
 
-  useEffect(() => {
-    getExistingThumbnails();
-  }, [bookmarks]);
-
+  /**
+   * Clear all form fields
+   */
   const clearFormFields = () => {
     setNewBookmark({
       title: "",
@@ -206,6 +208,9 @@ const AddBookmarkDialog = (): JSX.Element => {
     setThumbnailPreviewUrl("");
   };
 
+  /**
+   * Handle form submission
+   */
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setAddingBookmark(false);
@@ -213,7 +218,11 @@ const AddBookmarkDialog = (): JSX.Element => {
 
     try {
       if (thumbnailUploaded) {
-        await uploadThumbnailToFirebase();
+        const thumbnailUrl = await uploadThumbnailToFirebase();
+        setNewBookmark((prevState) => ({
+          ...prevState,
+          thumbnailUrl: thumbnailUrl,
+        }));
       }
       addNewBookmark(bookmarksRef, newBookmark);
     } catch (err) {
@@ -221,6 +230,9 @@ const AddBookmarkDialog = (): JSX.Element => {
     }
   };
 
+  /**
+   * Remove the currently selected thumbnail
+   */
   const removeThumbnail = () => {
     setImage(null);
     setThumbnailPreviewUrl(null);
@@ -234,13 +246,18 @@ const AddBookmarkDialog = (): JSX.Element => {
   /**
    * Parse all existing bookmark categories every time the bookmarks are changed
    */
-  useEffect(() => {
+  const getExistingCategories = () => {
     const tempCategories: string[] = [];
     Object.values(bookmarks).forEach((category: Record<string, any>) => {
       const categoryName = Object.values(category).pop().category;
       tempCategories.push(categoryName);
     });
     setBookmarkCategories(tempCategories);
+  };
+
+  useEffect(() => {
+    getExistingCategories();
+    getExistingThumbnails();
   }, [bookmarks]);
 
   //* ========================= RETURN ==============================

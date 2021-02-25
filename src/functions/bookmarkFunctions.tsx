@@ -3,7 +3,7 @@ import firebase from "firebase/app";
 
 export const addNewBookmark = async (
   bookmarksRef: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>,
-  { title, url, category, thumbnailUrl, position }: FirebaseBookmark
+  { title, url, category, thumbnailUrl, position = 0 }: FirebaseBookmark
 ) => {
   bookmarksRef
     .add({
@@ -11,7 +11,7 @@ export const addNewBookmark = async (
       url: url,
       category: category,
       thumbnailUrl: thumbnailUrl,
-      position: 0,
+      position: position,
     })
     .then(() => {
       console.log(`Bookmark '${title}' added!`);
