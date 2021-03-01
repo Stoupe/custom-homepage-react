@@ -18,7 +18,11 @@ import { FirebaseBookmark } from "./Types";
 import Image from "material-ui-image";
 
 const useStyles = makeStyles((theme) => ({
+  root: {},
   bookmarkBox: {
+    width: "5.5rem",
+    display: "flex",
+    justifyContent: "center",
     position: "relative",
   },
   thumbnail: {
@@ -41,10 +45,14 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     borderRadius: "1rem",
   },
+  title: {
+    paddingTop: "0.3rem",
+    textAlign: "center",
+  },
   removeCircleContainer: {
     position: "absolute",
-    top: "-0.3rem",
-    right: "-0.3rem",
+    marginLeft: "4.5rem",
+    top: "-0.4rem",
   },
 }));
 
@@ -62,7 +70,7 @@ const Bookmark = ({
   const bookmarksRef = useBookmarksRef();
 
   return (
-    <Grid item>
+    <Grid item className={classes.root}>
       <Grow in={true}>
         <Tooltip
           title={url ?? "no url"}
@@ -83,7 +91,13 @@ const Bookmark = ({
                   disableSpinner
                 ></Image>
               </Box>
-              <Typography variant="subtitle2">{title ?? "No Title"}</Typography>
+              <Typography
+                className={classes.title}
+                variant="subtitle2"
+                lineHeight={"1rem"}
+              >
+                {title ?? "No Title"}
+              </Typography>
             </ButtonBase>
             {editingBookmarks && (
               <Grow in={true}>
