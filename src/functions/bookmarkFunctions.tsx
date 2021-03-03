@@ -5,6 +5,8 @@ export const addNewBookmark = async (
   bookmarksRef: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>,
   { title, url, category, thumbnailUrl, position = 0 }: FirebaseBookmark
 ) => {
+  console.log("BOOKMARK BEING ADDED TO FIREBASE:");
+  console.log({ title, url, category, thumbnailUrl, position });
   bookmarksRef
     .add({
       title: title,

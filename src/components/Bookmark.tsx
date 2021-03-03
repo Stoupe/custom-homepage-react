@@ -16,6 +16,7 @@ import { BookmarksContext } from "./Contexts";
 // import scrapFavicon from "scrap-favicon";
 import { FirebaseBookmark } from "./Types";
 import Image from "material-ui-image";
+import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -49,11 +50,34 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "0.3rem",
     textAlign: "center",
   },
-  removeCircleContainer: {
+  // editButtons: {
+  //   position: "absolute",
+  // },
+  editIconContainer: {
     position: "absolute",
-    marginLeft: "4.5rem",
-    top: "-0.4rem",
+
+    width: "5.5rem",
+    height: "5.5rem",
+
+    background: "rgba(000,000,000,0.5)",
+    borderRadius: "1.5rem",
+
+    "& > button": {
+      width: "100%",
+      height: "100%",
+      color: "white",
+    },
   },
+  editIcon: {
+    // all: "initial",
+    // width: "3rem",
+    // height: "3rem",
+  },
+  // removeIconContainer: {
+  //   position: "absolute",
+  //   marginLeft: "4.5rem",
+  //   top: "-0.4rem",
+  // },
 }));
 
 const Bookmark = ({
@@ -64,7 +88,7 @@ const Bookmark = ({
   bookmark: FirebaseBookmark;
 }) => {
   const classes = useStyles();
-  const { editingBookmarks } = useContext(BookmarksContext);
+  const { editingView } = useContext(BookmarksContext);
 
   const { title, url, thumbnailUrl } = bookmark;
   const bookmarksRef = useBookmarksRef();
@@ -75,11 +99,11 @@ const Bookmark = ({
         <Tooltip
           title={url ?? "no url"}
           arrow
-          disableHoverListener={editingBookmarks}
+          disableHoverListener={editingView}
         >
           <Box className={classes.bookmarkBox}>
             <ButtonBase
-              disabled={editingBookmarks}
+              disabled={editingView}
               className={classes.button}
               href={url as string}
             >
@@ -99,17 +123,28 @@ const Bookmark = ({
                 {title ?? "No Title"}
               </Typography>
             </ButtonBase>
-            {editingBookmarks && (
+            {editingView && (
               <Grow in={true}>
-                <Box className={classes.removeCircleContainer}>
+                {/* <Box className={classes.editButtons}> */}
+                <Box className={classes.editIconContainer}>
                   <ButtonBase
                     onClick={() => {
                       deleteBookmark(bookmarksRef, uid);
                     }}
                   >
-                    <RemoveCircleIcon />
+                    <EditIcon className={classes.editIcon} />
                   </ButtonBase>
+                  {/* <Box className={classes.removeIconContainer}>
+                      <ButtonBase
+                        onClick={() => {
+                          deleteBookmark(bookmarksRef, uid);
+                        }}
+                      >
+                        <RemoveCircleIcon />
+                      </ButtonBase>
+                    </Box> */}
                 </Box>
+                {/* </Box> */}
               </Grow>
             )}
           </Box>

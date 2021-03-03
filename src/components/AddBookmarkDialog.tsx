@@ -208,6 +208,10 @@ const AddBookmarkDialog = (): JSX.Element => {
     setThumbnailPreviewUrl("");
   };
 
+  // useEffect(() => {
+
+  // }, [newBookmark.thumbnailUrl]);
+
   /**
    * Handle form submission
    */
@@ -219,10 +223,21 @@ const AddBookmarkDialog = (): JSX.Element => {
     try {
       if (thumbnailUploaded) {
         const thumbnailUrl = await uploadThumbnailToFirebase();
+        console.log(`Got thumbnail URL: ${thumbnailUrl}`);
+        console.log("about to update state");
+
         setNewBookmark((prevState) => ({
           ...prevState,
           thumbnailUrl: thumbnailUrl,
         }));
+        // console.log(thumbnailUrl);
+        // console.log(newBookmark.thumbnailUrl);
+        while (newBookmark.thumbnailUrl !== thumbnailUrl) {
+          // console.log(
+          // `waiting for state to update... ${newBookmark.thumbnailUrl}`
+          // );
+        }
+        console.log("done");
       }
       addNewBookmark(bookmarksRef, newBookmark);
     } catch (err) {

@@ -11,10 +11,15 @@ export const UserContext: Context<{
 }> = createContext(null);
 
 export const BookmarksContext: Context<{
-  editingBookmarks: boolean;
-  setEditingBookmarks: Set<boolean>;
-  addingBookmark: boolean;
-  setAddingBookmark: Set<boolean>;
   bookmarks: Record<string, Record<string, FirebaseBookmark>>;
   setBookmarks: Set<Record<string, Record<string, FirebaseBookmark>>>;
+
+  addingBookmark: boolean;
+  setAddingBookmark: Set<boolean>;
+
+  editingView: boolean;
+  setEditingView: Set<boolean>;
+
+  editingBookmark: firebase.firestore.DocumentReference;
+  setEditingBookmark: Set<firebase.firestore.DocumentReference>;
 }> = createContext(null);

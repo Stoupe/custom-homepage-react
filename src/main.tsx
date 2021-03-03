@@ -20,7 +20,11 @@ const Main = () => {
 
   const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
   const [addingBookmark, setAddingBookmark] = useState<boolean>(false);
-  const [editingBookmarks, setEditingBookmarks] = useState<boolean>(false);
+  const [editingView, setEditingView] = useState<boolean>(false);
+  const [
+    editingBookmark,
+    setEditingBookmark,
+  ] = useState<firebase.firestore.DocumentReference>(null);
 
   return (
     <React.StrictMode>
@@ -31,8 +35,10 @@ const Main = () => {
             setBookmarks,
             addingBookmark,
             setAddingBookmark,
-            editingBookmarks,
-            setEditingBookmarks,
+            editingView,
+            setEditingView,
+            editingBookmark,
+            setEditingBookmark,
           }}
         >
           <StylesProvider injectFirst>

@@ -26,7 +26,6 @@ const BookmarkCategory = ({
   category: string;
   bookmarks?: Record<string, FirebaseBookmark>;
 }): JSX.Element => {
-  // console.log(bookmarks);
   const classes = useStyles();
 
   return (

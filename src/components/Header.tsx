@@ -44,7 +44,7 @@ const Header: React.FC = () => {
     setAnchorEl(null);
   };
 
-  const { setEditingBookmarks } = useContext(BookmarksContext);
+  const { setEditingView } = useContext(BookmarksContext);
 
   return (
     <AppBar position="static" className={classes.root}>
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
           <div>
             <IconButton
               onClick={() => {
-                setEditingBookmarks((prevState) => !prevState);
+                setEditingView((prevState) => !prevState);
               }}
               color="inherit"
             >
