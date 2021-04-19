@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme) => ({
     margin: "0.2rem",
     padding: "1rem",
     backgroundColor: "#eee",
+    borderRadius: "1rem",
   },
   title: {
     marginTop: theme.spacing(1),
