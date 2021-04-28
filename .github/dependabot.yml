@@ -1,0 +1,17 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: "@types/node"
+    versions:
+    - 15.0.0
+  - dependency-name: "@testing-library/jest-dom"
+    versions:
+    - 5.11.10
+  - dependency-name: "@vitejs/plugin-react-refresh"
+    versions:
+    - 1.3.2
