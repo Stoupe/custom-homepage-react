@@ -1,24 +1,14 @@
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Grid, Paper, Typography } from "@material-ui/core";
 import React from "react";
 import Bookmark from "./Bookmark";
 import { makeStyles } from "@material-ui/styles";
 import { FirebaseBookmark } from "./Types";
 
 const useStyles = makeStyles((theme) => ({
-  root: {
-    // backgroundColor: theme.palette.background.paper,
-    // display: "grid",
-  },
-  container: {
-    // margin: "0.2rem",
-    // padding: "1rem",
-    backgroundColor: "#eee",
-    // borderRadius: "1rem",
-  },
+  root: {},
+  container: {},
   title: {
-    // marginTop: theme.spacing(1),
-    marginTop: 1,
-    textAlign: "center",
+    // textAlign: "center",
   },
 }));
 
@@ -36,7 +26,7 @@ const BookmarkCategory = ({
       <div className={classes.title}>
         <Typography variant="h5">{category}</Typography>
       </div>
-      <Box className={classes.container}>
+      <Paper className={classes.container}>
         <Grid container justifyContent="center">
           <Grid item>
             <Grid container spacing={3} justifyContent="center">
@@ -46,7 +36,7 @@ const BookmarkCategory = ({
             </Grid>
           </Grid>
         </Grid>
-      </Box>
+      </Paper>
     </div>
   );
 };

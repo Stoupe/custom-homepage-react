@@ -47,7 +47,7 @@ const Header: React.FC = () => {
   const { setEditingView } = useContext(BookmarksContext);
 
   return (
-    <AppBar position="static" className={classes.root}>
+    <AppBar position="static" className={classes.root} enableColorOnDark>
       <Toolbar className={classes.toolbar}>
         {/* <IconButton
           edge="start"
@@ -57,12 +57,13 @@ const Header: React.FC = () => {
         >
           <MenuIcon />
         </IconButton> */}
-        <Typography variant="h6" className={classes.title}>
-          Bookmarks
+        <Typography variant="h1" className={classes.title}>
+          bookmarks
         </Typography>
         <IconButton
           color="inherit"
           href={"https://github.com/Stoupe/custom-homepage-react"}
+          target="_blank"
         >
           <GitHubIcon />
         </IconButton>
@@ -80,6 +81,7 @@ const Header: React.FC = () => {
             <IconButton onClick={handleMenu} color="inherit">
               <AccountCircle />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}

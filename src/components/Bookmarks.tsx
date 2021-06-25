@@ -1,20 +1,34 @@
 import {
+  Box,
+  Button,
   Card,
   CardContent,
   CircularProgress,
+  Container,
+  Grid,
+  Paper,
   Typography,
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import { useBookmarksRef } from "../functions/useBookmarksRef";
+import Bookmark from "./Bookmark";
 import BookmarkCategory from "./BookmarkCategory";
 import { BookmarksContext, UserContext } from "./Contexts";
+import NewBookmark from "./NewBookmark";
 
 // test
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+  bookmarksContainer: {
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: "#424242",
+    borderRadius: 20,
+  },
+
   noBookmarksContainer: {
     display: "flex",
     alignItems: "center",
@@ -70,6 +84,14 @@ const Bookmarks: React.FC = (): JSX.Element => {
   }, []);
 
   // if (loading) return <CircularProgress />;
+
+  return (
+    <Container className={classes.bookmarksContainer}>
+      <NewBookmark />
+      <NewBookmark />
+      <NewBookmark />
+    </Container>
+  );
 
   return (
     <div className={classes.root}>

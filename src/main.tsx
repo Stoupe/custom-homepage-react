@@ -10,29 +10,48 @@ import { BookmarksContext, UserContext } from "./components/Contexts";
 import firebase from "firebase/app";
 // import StylesProvider from "@material-ui/styles";
 import { useFirebase } from "./functions/firebase";
+
+import { Container } from "@material-ui/core";
+import { ThemeProvider } from "@emotion/react";
+
 import {
   createTheme,
-  ThemeProvider,
   responsiveFontSizes,
   ThemeOptions,
 } from "@material-ui/core/styles";
+import { lightGreen } from "@material-ui/core/colors";
 
 export const themeOptions: ThemeOptions = {
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          // background: "green",
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          // backgroundColor: "#424242",
+        },
+      },
+    },
     MuiAppBar: {
       styleOverrides: {
         root: {
           width: "calc(100% - 20px)",
           margin: 10,
-          borderRadius: 50,
+          borderRadius: 100,
         },
       },
     },
   },
   palette: {
-    mode: "light",
+    mode: "dark",
+    background: { default: "#555555" },
     primary: {
-      main: "#6541B3",
+      main: "#C591FF",
     },
     secondary: {
       main: "#f50057",
@@ -40,6 +59,28 @@ export const themeOptions: ThemeOptions = {
   },
   typography: {
     fontFamily: "Poppins",
+    allVariants: {
+      color: "white",
+    },
+    h1: {
+      fontSize: 22,
+      fontWeight: 400,
+      color: "black",
+    },
+    h2: {
+      color: "white",
+      fontSize: 20,
+      fontWeight: 600,
+      textAlign: "center",
+    },
+    h3: {
+      fontSize: 14,
+      fontWeight: 300,
+    },
+  },
+  // spacing: 10,
+  shape: {
+    borderRadius: 10,
   },
 };
 

@@ -1,4 +1,4 @@
-import { Box, Fab } from "@material-ui/core";
+import { Box, Container, Fab } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useContext } from "react";
@@ -10,8 +10,8 @@ import TimeTracker from "./TimeTracker";
 
 const useStyles = makeStyles({
   root: {},
-  container: {
-    padding: "1em",
+  main: {
+    backgroundColor: "#363636",
   },
   fab: {
     position: "fixed",
@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: `0 auto 30%`,
+    gridTemplateColumns: `10% auto 10%`,
     gap: "1rem",
   },
 });
@@ -38,17 +38,17 @@ const App = () => {
     <div>
       <Header />
       {user && (
-        <Box className={classes.root}>
-          <Box className={classes.grid}>
-            <div className={classes.container}></div>
-            <div className={classes.container}>
+        <main className={classes.root}>
+          {/* === Main outer grid === */}
+          <div className={classes.grid}>
+            <Container></Container>
+            <Container>
               <Bookmarks />
-            </div>
-            <div className={classes.container}>
-              <TimeTracker />
-            </div>
-          </Box>
+            </Container>
+            <Container>{/* <TimeTracker /> */}</Container>
+          </div>
 
+          {/* === FAB === */}
           <div className={classes.fab}>
             <Fab
               // variant="contained"
@@ -62,7 +62,7 @@ const App = () => {
           </div>
 
           <AddBookmarkDialog />
-        </Box>
+        </main>
       )}
     </div>
   );
