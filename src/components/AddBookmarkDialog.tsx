@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import DeleteIcon from "@material-ui/icons/Delete";
 import PhotoLibraryIcon from "@material-ui/icons/PhotoLibrary";
@@ -32,21 +32,21 @@ const useStyles = makeStyles((theme) => ({
   input: {
     // margin: "3rem",
     "& > div": {
-      padding: theme.spacing(1),
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
+      // padding: theme.spacing(1),
+      // marginTop: theme.spacing(1),
+      // marginBottom: theme.spacing(1),
     },
   },
   autocomplete: {
     "& > div": {
-      marginTop: theme.spacing(2),
+      // marginTop: theme.spacing(2),
       // padding: "4rem",
     },
   },
   thumbnail: {
-    marginBottom: theme.spacing(1),
-    marginLeft: theme.spacing(0.5),
-    marginRight: theme.spacing(0.5),
+    // marginBottom: theme.spacing(1),
+    // marginLeft: theme.spacing(0.5),
+    // marginRight: theme.spacing(0.5),
 
     width: "5.5rem",
     height: "5.5rem",
@@ -74,9 +74,8 @@ const useStyles = makeStyles((theme) => ({
  */
 const AddBookmarkDialog = (): JSX.Element => {
   const { user } = useContext(UserContext);
-  const { bookmarks, addingBookmark, setAddingBookmark } = useContext(
-    BookmarksContext
-  );
+  const { bookmarks, addingBookmark, setAddingBookmark } =
+    useContext(BookmarksContext);
 
   const [newBookmark, setNewBookmark] = useState<FirebaseBookmark>({
     title: "",
@@ -92,9 +91,8 @@ const AddBookmarkDialog = (): JSX.Element => {
   const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState<
     string | ArrayBuffer
   >();
-  const [choosingExistingImage, setChoosingExistingImage] = useState<boolean>(
-    false
-  );
+  const [choosingExistingImage, setChoosingExistingImage] =
+    useState<boolean>(false);
   const [thumbnailUploaded, setThumbnailUploaded] = useState<boolean>(false);
   const [bookmarkCategories, setBookmarkCategories] = useState<Array<string>>(
     []

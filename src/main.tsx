@@ -8,8 +8,40 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { BookmarksContext, UserContext } from "./components/Contexts";
 import firebase from "firebase/app";
-import { StylesProvider } from "@material-ui/core/styles";
+// import StylesProvider from "@material-ui/styles";
 import { useFirebase } from "./functions/firebase";
+import {
+  createTheme,
+  ThemeProvider,
+  responsiveFontSizes,
+  ThemeOptions,
+} from "@material-ui/core/styles";
+
+export const themeOptions: ThemeOptions = {
+  components: {
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          width: "calc(100% - 20px)",
+          margin: 10,
+          borderRadius: 50,
+        },
+      },
+    },
+  },
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#6541B3",
+    },
+    secondary: {
+      main: "#f50057",
+    },
+  },
+  typography: {
+    fontFamily: "Poppins",
+  },
+};
 
 const Main = () => {
   useFirebase();
@@ -21,10 +53,11 @@ const Main = () => {
   const [bookmarks, setBookmarks] = useState<Record<string, any>>({});
   const [addingBookmark, setAddingBookmark] = useState<boolean>(false);
   const [editingView, setEditingView] = useState<boolean>(false);
-  const [
-    editingBookmark,
-    setEditingBookmark,
-  ] = useState<firebase.firestore.DocumentReference>(null);
+  const [editingBookmark, setEditingBookmark] =
+    useState<firebase.firestore.DocumentReference>(null);
+
+  let theme = createTheme(themeOptions);
+  theme = responsiveFontSizes(theme);
 
   return (
     <React.StrictMode>
@@ -41,9 +74,11 @@ const Main = () => {
             setEditingBookmark,
           }}
         >
-          <StylesProvider injectFirst>
+          {/* <StylesProvider injectFirst> */}
+          <ThemeProvider theme={theme}>
             <App />
-          </StylesProvider>
+          </ThemeProvider>
+          {/* </StylesProvider> */}
         </BookmarksContext.Provider>
       </UserContext.Provider>
     </React.StrictMode>

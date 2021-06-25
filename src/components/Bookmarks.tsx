@@ -4,7 +4,7 @@ import {
   CircularProgress,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
 import { useBookmarksRef } from "../functions/useBookmarksRef";
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   noBookmarks: {
-    marginTop: theme.spacing(2),
+    // marginTop: theme.spacing(2),
   },
 }));
 

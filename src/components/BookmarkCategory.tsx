@@ -1,21 +1,23 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import React from "react";
 import Bookmark from "./Bookmark";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { FirebaseBookmark } from "./Types";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     // backgroundColor: theme.palette.background.paper,
+    // display: "grid",
   },
   container: {
-    margin: "0.2rem",
-    padding: "1rem",
+    // margin: "0.2rem",
+    // padding: "1rem",
     backgroundColor: "#eee",
-    borderRadius: "1rem",
+    // borderRadius: "1rem",
   },
   title: {
-    marginTop: theme.spacing(1),
+    // marginTop: theme.spacing(1),
+    marginTop: 1,
     textAlign: "center",
   },
 }));

@@ -8,7 +8,7 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
   root: {},
   toolbar: {},
   menuButton: {
-    marginRight: theme.spacing(2),
+    // marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,

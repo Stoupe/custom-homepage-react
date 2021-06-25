@@ -1,7 +1,7 @@
-import { Box, Container, Fab } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { Box, Fab } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import AddIcon from "@material-ui/icons/Add";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import AddBookmarkDialog from "./AddBookmarkDialog";
 import Bookmarks from "./Bookmarks";
 import { BookmarksContext, UserContext } from "./Contexts";
