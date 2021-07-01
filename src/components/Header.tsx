@@ -58,7 +58,7 @@ const Header: React.FC = () => {
           <MenuIcon />
         </IconButton> */}
         <Typography variant="h1" className={classes.title}>
-          bookmarks
+          Home
         </Typography>
         <IconButton
           color="inherit"

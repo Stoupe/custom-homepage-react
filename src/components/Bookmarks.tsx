@@ -9,6 +9,7 @@ import {
   Paper,
   Typography,
 } from "@material-ui/core";
+import { Title } from "@material-ui/icons";
 import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useFirebase } from "../functions/firebase";
@@ -87,9 +88,30 @@ const Bookmarks: React.FC = (): JSX.Element => {
 
   return (
     <Container className={classes.bookmarksContainer}>
-      <NewBookmark />
-      <NewBookmark />
-      <NewBookmark />
+      {Object.keys(bookmarks).length === 0 && !loading && (
+        // <div className={classes.noBookmarksContainer}>
+        // TODO: add a 'new bookmark' button here
+        <Container>
+          <Typography variant="h2">No Bookmarks Found</Typography>
+          <Typography variant="body1">
+            Add bookmarks with the + icon in the bottom right corner
+          </Typography>
+          {/* <CardContent>
+              <Typography variant="h5">No Bookmarks Found</Typography>
+              <Typography variant="body1">
+                Add bookmarks with the + icon in the bottom right corner
+              </Typography>
+            </CardContent> */}
+        </Container>
+        // </div>
+      )}
+      {Object.entries(bookmarks).map(([key, value]) => {
+        return <NewBookmark key={key} category={key} bookmarks={value} />;
+        // return <BookmarkCategory key={key} category={key} bookmarks={value} />;
+      })}
+      {/* // <NewBookmark />
+      // <NewBookmark />
+      // <NewBookmark /> */}
     </Container>
   );
 

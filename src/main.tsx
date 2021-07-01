@@ -20,23 +20,10 @@ import {
   ThemeOptions,
 } from "@material-ui/core/styles";
 import { lightGreen } from "@material-ui/core/colors";
+import colours from "./variables/colours";
 
 export const themeOptions: ThemeOptions = {
   components: {
-    MuiContainer: {
-      styleOverrides: {
-        root: {
-          // background: "green",
-        },
-      },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          // backgroundColor: "#424242",
-        },
-      },
-    },
     MuiAppBar: {
       styleOverrides: {
         root: {
@@ -49,12 +36,12 @@ export const themeOptions: ThemeOptions = {
   },
   palette: {
     mode: "dark",
-    background: { default: "#555555" },
+    background: { default: colours.grey },
     primary: {
-      main: "#C591FF",
+      main: colours.purple,
     },
     secondary: {
-      main: "#f50057",
+      main: colours.red,
     },
   },
   typography: {
@@ -71,10 +58,10 @@ export const themeOptions: ThemeOptions = {
       color: "white",
       fontSize: 20,
       fontWeight: 600,
-      textAlign: "center",
+      // textAlign: "center",
     },
     h3: {
-      fontSize: 14,
+      fontSize: 12,
       fontWeight: 300,
     },
   },

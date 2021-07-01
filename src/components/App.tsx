@@ -20,8 +20,8 @@ const useStyles = makeStyles({
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: `10% auto 10%`,
-    gap: "1rem",
+    gridTemplateColumns: `20% auto 20%`,
+    gap: 0,
   },
 });
 
@@ -41,7 +41,7 @@ const App = () => {
         <main className={classes.root}>
           {/* === Main outer grid === */}
           <div className={classes.grid}>
-            <Container></Container>
+            <Container>{/*<TimeTracker />*/}</Container>
             <Container>
               <Bookmarks />
             </Container>
