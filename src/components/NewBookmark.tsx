@@ -6,6 +6,7 @@ import {
   Grow,
   Link,
   ButtonBase,
+  Tooltip,
 } from "@material-ui/core";
 import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
 import { makeStyles, styled } from "@material-ui/styles";
@@ -14,24 +15,7 @@ import { useBookmarksRef } from "../functions/useBookmarksRef";
 import { BookmarksContext } from "./Contexts";
 import { FirebaseBookmark } from "./Types";
 
-const useStyles = makeStyles((theme) => ({
-  bookmarkTitle: {
-    textAlign: "center",
-    marginTop: 10,
-  },
-  bookmarkIcon: {
-    padding: 0,
-    borderRadius: 2,
-    boxShadow: "0 0 40px rgba(000,000,000,0.25)",
-    backgroundColor: "#424242",
-    height: 70,
-    width: 70,
-    // overflow: "hidden",
-  },
-  img: {
-    height: "100%",
-  },
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 const BM = ({ uid, bookmark }: { uid: string; bookmark: FirebaseBookmark }) => {
   const classes = useStyles();
@@ -43,19 +27,25 @@ const BM = ({ uid, bookmark }: { uid: string; bookmark: FirebaseBookmark }) => {
   return (
     <Grow in={true}>
       <Grid item>
-        <Box draggable>
-          <ButtonBase className={classes.bookmarkIcon} href={url as string}>
+        <Box
+          draggable
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            width: "5rem",
+            alignItems: "center",
+            textAlign: "center",
+            overflow: "hidden",
+          }}
+        >
+          <ButtonBase href={url as string}>
             <img
-              className={classes.img}
               src={thumbnailUrl}
               alt={title + " thumbnail"}
+              style={{ height: "5rem", width: "5rem", borderRadius: "1rem" }}
             />
           </ButtonBase>
-          <Typography
-            variant="h3"
-            className={classes.bookmarkTitle}
-            marginTop={0.5}
-          >
+          <Typography variant="h3" style={{ marginTop: "0.3rem" }}>
             {title}
           </Typography>
         </Box>

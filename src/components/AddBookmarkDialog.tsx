@@ -25,48 +25,45 @@ import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
 import { FirebaseBookmark } from "./Types";
 import Image from "material-ui-image";
-import classes from "*.module.css";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
-  input: {
-    // margin: "3rem",
-    "& > div": {
-      // padding: theme.spacing(1),
-      // marginTop: theme.spacing(1),
-      // marginBottom: theme.spacing(1),
-    },
-  },
-  autocomplete: {
-    "& > div": {
-      // marginTop: theme.spacing(2),
-      // padding: "4rem",
-    },
-  },
-  thumbnail: {
-    // marginBottom: theme.spacing(1),
-    // marginLeft: theme.spacing(0.5),
-    // marginRight: theme.spacing(0.5),
-
-    width: "5.5rem",
-    height: "5.5rem",
-    border: "0.5rem solid #ddd",
-    borderRadius: "1.5rem",
-    // position: "flex",
-    boxSizing: "border-box",
-
-    "& > div": {
-      borderRadius: "1rem",
-    },
-  },
-  thumbnailImage: {
-    borderRadius: "1rem",
-  },
-  centered: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
+  // root: {},
+  // input: {
+  //   // margin: "3rem",
+  //   "& > div": {
+  //     // padding: theme.spacing(1),
+  //     // marginTop: theme.spacing(1),
+  //     // marginBottom: theme.spacing(1),
+  //   },
+  // },
+  // autocomplete: {
+  //   "& > div": {
+  //     // marginTop: theme.spacing(2),
+  //     // padding: "4rem",
+  //   },
+  // },
+  // thumbnail: {
+  //   // marginBottom: theme.spacing(1),
+  //   // marginLeft: theme.spacing(0.5),
+  //   // marginRight: theme.spacing(0.5),
+  //   width: "5.5rem",
+  //   height: "5.5rem",
+  //   border: "0.5rem solid #ddd",
+  //   borderRadius: "1.5rem",
+  //   // position: "flex",
+  //   boxSizing: "border-box",
+  //   "& > div": {
+  //     borderRadius: "1rem",
+  //   },
+  // },
+  // thumbnailImage: {
+  //   borderRadius: "1rem",
+  // },
+  // centered: {
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   alignItems: "center",
+  // },
 }));
 
 /**
@@ -276,75 +273,63 @@ const AddBookmarkDialog = (): JSX.Element => {
   //* ========================= RETURN ==============================
 
   return (
-    <Dialog
-      maxWidth="xs"
-      className={classes.root}
-      open={addingBookmark}
-      onClose={() => {
-        setAddingBookmark(false);
-      }}
-    >
-      <DialogTitle>New Bookmark</DialogTitle>
-      <form onSubmit={handleSubmit} noValidate>
-        <DialogContent>
-          <TextField
-            className={classes.input}
-            autoFocus
-            label="Title"
-            type="text"
-            fullWidth
-            value={newBookmark.title}
-            onChange={(e) => {
-              setNewBookmark((prevState) => ({
-                ...prevState,
-                title: e.target.value,
-              }));
-            }}
-          />
-          <TextField
-            className={classes.input}
-            label="URL"
-            type="url"
-            fullWidth
-            // margin="normal"
-            value={newBookmark.url}
-            onChange={(e) => {
-              setNewBookmark((prevState) => ({
-                ...prevState,
-                url: e.target.value,
-              }));
-            }}
-          />
-          {/* ==========SELECT THUMBNAIL IMAGE============ */}
-          <Typography variant="caption">Thumbnail</Typography>
-          <Box className={classes.centered}>
+    <>
+      <Dialog
+        maxWidth="xs"
+        open={addingBookmark}
+        onClose={() => {
+          setAddingBookmark(false);
+        }}
+      >
+        <form onSubmit={handleSubmit} noValidate>
+          <DialogTitle>New Bookmark</DialogTitle>
+          <DialogContent
+            style={{ display: "grid", gap: "1rem", padding: "1rem auto" }}
+          >
+            <TextField
+              autoFocus
+              label="Title"
+              fullWidth
+              value={newBookmark.title}
+              onChange={(e) => {
+                setNewBookmark((prevState) => ({
+                  ...prevState,
+                  title: e.target.value,
+                }));
+              }}
+            />
+            <TextField
+              label="URL"
+              type="url"
+              fullWidth
+              value={newBookmark.url}
+              onChange={(e) => {
+                setNewBookmark((prevState) => ({
+                  ...prevState,
+                  url: e.target.value,
+                }));
+              }}
+            />
+            {/* ==========SELECT THUMBNAIL IMAGE============ */}
+            <Typography variant="caption">Thumbnail</Typography>
             {thumbnailPreviewUrl && (
-              // <Box className={classes.thumbnail}>
-
               <ButtonBase
+                style={{ width: "5rem", height: "5rem" }}
                 type="button"
                 onClick={(e) => {
                   e.preventDefault();
                 }}
               >
-                <Box className={classes.thumbnail}>
-                  <Image
-                    className={classes.thumbnailImage}
-                    alt="thumbnail"
-                    // width="60rem"
-                    // height="60rem"
-
-                    src={thumbnailPreviewUrl as string}
-                  />
-                </Box>
+                <Image
+                  alt="thumbnail"
+                  style={{ width: "100%", backgroundColor: "none" }}
+                  imageStyle={{ borderRadius: "1rem" }}
+                  src={thumbnailPreviewUrl as string}
+                />
               </ButtonBase>
             )}
 
-            <ButtonGroup
-              variant="contained"
-              color="primary"
-              aria-label="contained primary button group"
-            >
+            <ButtonGroup>
               <Button
                 variant="contained"
                 component="label"
@@ -375,71 +360,71 @@ const AddBookmarkDialog = (): JSX.Element => {
               </Button>
             </ButtonGroup>
 
-            {choosingExistingImage && (
-              // <Box>
-              <Dialog
-                open={choosingExistingImage}
-                onClose={() => setChoosingExistingImage(false)}
-              >
-                <DialogTitle>Choose Image</DialogTitle>
-                <DialogContent>
-                  <ImageList cols={3}>
-                    {existingThumbnails.map((itemUrl) => (
-                      <ImageListItem key={itemUrl}>
-                        <ButtonBase
-                          onClick={() => {
-                            removeThumbnail();
-                            setThumbnailPreviewUrl(itemUrl);
-                            setNewBookmark((prevState) => ({
-                              ...prevState,
-                              thumbnailUrl: itemUrl,
-                            }));
-                            setChoosingExistingImage(false);
-                          }}
-                        >
-                          <Box className={classes.thumbnail}>
-                            <Image
-                              className={classes.thumbnailImage}
-                              src={itemUrl}
-                              disableSpinner
-                            />
-                          </Box>
-                        </ButtonBase>
-                      </ImageListItem>
-                    ))}
-                  </ImageList>
-                </DialogContent>
-              </Dialog>
-              // </Box>
-            )}
-          </Box>
-          {/* ===================== */}
-          <Autocomplete
-            freeSolo
-            className={classes.autocomplete}
-            options={bookmarkCategories}
-            value={newBookmark.category}
-            inputValue={newBookmark.category}
-            onInputChange={(e, newInputValue) => {
-              setNewBookmark((prevState) => ({
-                ...prevState,
-                category: newInputValue,
-              }));
-            }}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Category"
-                value={newBookmark.category}
-              />
-            )}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button type="submit">Add</Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+            <Autocomplete
+              freeSolo
+              options={bookmarkCategories}
+              value={newBookmark.category}
+              inputValue={newBookmark.category}
+              onInputChange={(e, newInputValue) => {
+                setNewBookmark((prevState) => ({
+                  ...prevState,
+                  category: newInputValue,
+                }));
+              }}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Category"
+                  value={newBookmark.category}
+                />
+              )}
+            />
+          </DialogContent>
+
+          <DialogActions>
+            <Button type="submit">Add</Button>
+          </DialogActions>
+        </form>
+      </Dialog>
+
+      {choosingExistingImage && (
+        <Dialog
+          open={choosingExistingImage}
+          onClose={() => setChoosingExistingImage(false)}
+        >
+          <DialogTitle>Choose Image</DialogTitle>
+          <DialogContent>
+            <ImageList cols={3} gap={10}>
+              {existingThumbnails.map((itemUrl) => (
+                <ImageListItem key={itemUrl}>
+                  <ButtonBase
+                    onClick={() => {
+                      removeThumbnail();
+                      setThumbnailPreviewUrl(itemUrl);
+                      setNewBookmark((prevState) => ({
+                        ...prevState,
+                        thumbnailUrl: itemUrl,
+                      }));
+                      setChoosingExistingImage(false);
+                    }}
+                  >
+                    <Image
+                      src={itemUrl}
+                      style={{
+                        width: "5rem",
+                        backgroundColor: "none",
+                        borderRadius: "1rem",
+                      }}
+                      imageStyle={{ borderRadius: "1rem" }}
+                    />
+                  </ButtonBase>
+                </ImageListItem>
+              ))}
+            </ImageList>
+          </DialogContent>
+        </Dialog>
+      )}
+    </>
   );
 };
 

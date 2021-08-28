@@ -18,67 +18,7 @@ import { FirebaseBookmark } from "./Types";
 import Image from "material-ui-image";
 import EditIcon from "@material-ui/icons/Edit";
 
-const useStyles = makeStyles((theme) => ({
-  root: {},
-  bookmarkBox: {
-    width: "5.5rem",
-    display: "flex",
-    justifyContent: "center",
-    position: "relative",
-  },
-  thumbnail: {
-    boxSizing: "border-box",
-    width: "5.5rem",
-    height: "5.5rem",
-    borderRadius: "1.5rem",
-    border: "0.5rem solid #ddd",
-    "& > *": {
-      borderRadius: "inherit",
-    },
-  },
-
-  button: {
-    flexDirection: "column",
-    // borderRadius: "0.2rem",
-  },
-  logo: {
-    width: "100%",
-    height: "100%",
-    borderRadius: "1rem",
-  },
-  title: {
-    paddingTop: "0.3rem",
-    textAlign: "center",
-  },
-  // editButtons: {
-  //   position: "absolute",
-  // },
-  editIconContainer: {
-    position: "absolute",
-
-    width: "5.5rem",
-    height: "5.5rem",
-
-    background: "rgba(000,000,000,0.5)",
-    borderRadius: "1.5rem",
-
-    "& > button": {
-      width: "100%",
-      height: "100%",
-      color: "white",
-    },
-  },
-  editIcon: {
-    // all: "initial",
-    // width: "3rem",
-    // height: "3rem",
-  },
-  // removeIconContainer: {
-  //   position: "absolute",
-  //   marginLeft: "4.5rem",
-  //   top: "-0.4rem",
-  // },
-}));
+const useStyles = makeStyles((theme) => ({}));
 
 const Bookmark = ({
   uid,
@@ -94,47 +34,42 @@ const Bookmark = ({
   const bookmarksRef = useBookmarksRef();
 
   return (
-    <Grid item className={classes.root}>
+    <Grid item>
       <Grow in={true}>
-        <Tooltip
-          title={url ?? "no url"}
-          arrow
-          disableHoverListener={editingView}
-        >
-          <Box className={classes.bookmarkBox}>
-            <ButtonBase
-              disabled={editingView}
-              className={classes.button}
-              href={url as string}
-            >
-              <Box className={classes.thumbnail}>
+        <Box>
+          <ButtonBase
+            // disabled={editingView}
+            href={url as string}
+          >
+            <Box>
+              <Tooltip
+                title={url ?? "no url"}
+                arrow
+                // disableHoverListener={editingView}
+              >
                 <Image
                   src={thumbnailUrl ?? "logo192.png"}
                   alt={title ?? "logo"}
-                  className={classes.logo}
                   disableSpinner
-                ></Image>
-              </Box>
-              <Typography
-                className={classes.title}
-                variant="subtitle2"
-                lineHeight={"1rem"}
-              >
-                {title ?? "No Title"}
-              </Typography>
-            </ButtonBase>
-            {editingView && (
-              <Grow in={true}>
-                {/* <Box className={classes.editButtons}> */}
-                <Box className={classes.editIconContainer}>
-                  <ButtonBase
-                    onClick={() => {
-                      deleteBookmark(bookmarksRef, uid);
-                    }}
-                  >
-                    <EditIcon className={classes.editIcon} />
-                  </ButtonBase>
-                  {/* <Box className={classes.removeIconContainer}>
+                />
+              </Tooltip>
+            </Box>
+            <Typography variant="subtitle2" lineHeight={"1rem"}>
+              {title ?? "No Title"}
+            </Typography>
+          </ButtonBase>
+          {editingView && (
+            <Grow in={true}>
+              {/* <Box className={classes.editButtons}> */}
+              <Box>
+                <ButtonBase
+                  onClick={() => {
+                    deleteBookmark(bookmarksRef, uid);
+                  }}
+                >
+                  <EditIcon />
+                </ButtonBase>
+                {/* <Box className={classes.removeIconContainer}>
                       <ButtonBase
                         onClick={() => {
                           deleteBookmark(bookmarksRef, uid);
@@ -143,12 +78,11 @@ const Bookmark = ({
                         <RemoveCircleIcon />
                       </ButtonBase>
                     </Box> */}
-                </Box>
-                {/* </Box> */}
-              </Grow>
-            )}
-          </Box>
-        </Tooltip>
+              </Box>
+              {/* </Box> */}
+            </Grow>
+          )}
+        </Box>
       </Grow>
     </Grid>
   );

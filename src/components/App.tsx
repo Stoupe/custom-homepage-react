@@ -10,9 +10,7 @@ import TimeTracker from "./TimeTracker";
 
 const useStyles = makeStyles({
   root: {},
-  main: {
-    backgroundColor: "#363636",
-  },
+
   fab: {
     position: "fixed",
     bottom: "1rem",

@@ -27,9 +27,9 @@ const BookmarkCategory = ({
         <Typography variant="h5">{category}</Typography>
       </div>
       <Paper className={classes.container}>
-        <Grid container justifyContent="center">
+        <Grid container>
           <Grid item>
-            <Grid container spacing={3} justifyContent="center">
+            <Grid container spacing={3}>
               {Object.entries(bookmarks).map(([key, value]) => {
                 return <Bookmark key={key} uid={key} bookmark={value} />;
               })}

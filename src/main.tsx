@@ -29,7 +29,7 @@ export const themeOptions: ThemeOptions = {
         root: {
           width: "calc(100% - 20px)",
           margin: 10,
-          borderRadius: 100,
+          borderRadius: 25,
         },
       },
     },
@@ -62,7 +62,7 @@ export const themeOptions: ThemeOptions = {
     },
     h3: {
       fontSize: 12,
-      fontWeight: 300,
+      fontWeight: 400,
     },
   },
   // spacing: 10,

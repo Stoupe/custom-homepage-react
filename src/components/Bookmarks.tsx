@@ -1,22 +1,9 @@
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  Container,
-  Grid,
-  Paper,
-  Typography,
-} from "@material-ui/core";
-import { Title } from "@material-ui/icons";
+import { Card, CardContent, Container, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
-import { useFirebase } from "../functions/firebase";
 import { useBookmarksRef } from "../functions/useBookmarksRef";
-import Bookmark from "./Bookmark";
 import BookmarkCategory from "./BookmarkCategory";
-import { BookmarksContext, UserContext } from "./Contexts";
+import { BookmarksContext } from "./Contexts";
 import NewBookmark from "./NewBookmark";
 
 // test
@@ -26,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   bookmarksContainer: {
     marginTop: 20,
     padding: 20,
-    backgroundColor: "#424242",
+    backgroundColor: "#282828",
     borderRadius: 20,
   },
 

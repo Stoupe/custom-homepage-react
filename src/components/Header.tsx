@@ -15,19 +15,25 @@ import { logInWithGoogle, logOut } from "../functions/auth";
 import { BookmarksContext, UserContext } from "./Contexts";
 import EditIcon from "@material-ui/icons/Edit";
 import GitHubIcon from "@material-ui/icons/GitHub";
+import { title } from "process";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  toolbar: {},
+  toolbar: { display: "flex" },
   menuButton: {
     // marginRight: theme.spacing(2),
   },
   title: {
+    // height: "100%",
     flexGrow: 1,
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   left: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
