@@ -1,5 +1,5 @@
 import firebase from "firebase/app";
-import "firebase/analytics";
+// import "firebase/analytics";
 import "firebase/firestore";
 
 const firebaseConfig = {
@@ -26,9 +26,9 @@ export const useFirebase = (): firebase.firestore.Firestore => {
     firebase.initializeApp(firebaseConfig);
 
     // Enable analytics
-    if ("measurementId" in firebaseConfig && typeof window !== "undefined") {
-      firebase.analytics();
-    }
+    // if ("measurementId" in firebaseConfig && typeof window !== "undefined") {
+    //   firebase.analytics();
+    // }
   }
   const db = firebase.firestore();
   return db;

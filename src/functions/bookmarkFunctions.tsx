@@ -25,7 +25,10 @@ export const addNewBookmark = async (
     });
 };
 
-export const deleteBookmark = async (bookmarksRef, bookmarkId: string) => {
+export const deleteBookmark = async (
+  bookmarksRef: firebase.firestore.CollectionReference<firebase.firestore.DocumentData>,
+  bookmarkId: string
+) => {
   bookmarksRef
     .doc(bookmarkId)
     .delete()

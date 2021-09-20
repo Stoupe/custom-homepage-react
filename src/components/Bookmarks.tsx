@@ -1,25 +1,26 @@
-import {
-  Card,
-  CardContent,
-  CircularProgress,
-  Typography,
-} from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { CircularProgress, Container, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
-import { useFirebase } from "../functions/firebase";
 import { useBookmarksRef } from "../functions/useBookmarksRef";
-import BookmarkCategory from "./BookmarkCategory";
-import { BookmarksContext, UserContext } from "./Contexts";
+import { BookmarksContext } from "./Contexts";
+import NewBookmark from "./NewBookmark";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
+  bookmarksContainer: {
+    marginTop: 20,
+    padding: 20,
+    backgroundColor: "#282828",
+    borderRadius: 20,
+  },
+
   noBookmarksContainer: {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   noBookmarks: {
-    marginTop: theme.spacing(2),
+    // marginTop: theme.spacing(2),
   },
 }));
 
@@ -67,29 +68,48 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  // if (loading) return <CircularProgress />;
+  if (loading)
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "90vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
 
   return (
-    <div className={classes.root}>
-      {/* TODO: Form validation, sumbit on enter, reset values on enter, no duplicates, auto update categories */}
-
+    <Container className={classes.bookmarksContainer}>
       {Object.keys(bookmarks).length === 0 && !loading && (
-        <div className={classes.noBookmarksContainer}>
-          <Card className={classes.noBookmarks}>
-            <CardContent>
+        // <div className={classes.noBookmarksContainer}>
+        // TODO: add a 'new bookmark' button here
+        <Container>
+          <Typography variant="h2">No Bookmarks Found</Typography>
+          <Typography variant="body1">
+            Add bookmarks with the + icon in the bottom right corner
+          </Typography>
+          {/* <CardContent>
               <Typography variant="h5">No Bookmarks Found</Typography>
               <Typography variant="body1">
                 Add bookmarks with the + icon in the bottom right corner
               </Typography>
-            </CardContent>
-          </Card>
-        </div>
+            </CardContent> */}
+        </Container>
+        // </div>
       )}
-
       {Object.entries(bookmarks).map(([key, value]) => {
-        return <BookmarkCategory key={key} category={key} bookmarks={value} />;
+        return <NewBookmark key={key} category={key} bookmarks={value} />;
+        // return <BookmarkCategory key={key} category={key} bookmarks={value} />;
       })}
-    </div>
+      {/* // <NewBookmark />
+      // <NewBookmark />
+      // <NewBookmark /> */}
+    </Container>
   );
 };
 

@@ -8,26 +8,32 @@ import {
   Toolbar,
   Typography,
 } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/styles";
 import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";
 import { BookmarksContext, UserContext } from "./Contexts";
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
+import Delete from "@material-ui/icons/Delete";
 import GitHubIcon from "@material-ui/icons/GitHub";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  toolbar: {},
+  toolbar: { display: "flex" },
   menuButton: {
-    marginRight: theme.spacing(2),
+    // marginRight: theme.spacing(2),
   },
   title: {
+    // height: "100%",
     flexGrow: 1,
+    alignContent: "center",
+    justifyContent: "center",
+    alignSelf: "center",
   },
   left: {
     display: "flex",
     alignItems: "center",
+    justifyContent: "center",
   },
 }));
 
@@ -47,7 +53,7 @@ const Header: React.FC = () => {
   const { setEditingView } = useContext(BookmarksContext);
 
   return (
-    <AppBar position="static" className={classes.root}>
+    <AppBar position="static" className={classes.root} enableColorOnDark>
       <Toolbar className={classes.toolbar}>
         {/* <IconButton
           edge="start"
@@ -57,12 +63,13 @@ const Header: React.FC = () => {
         >
           <MenuIcon />
         </IconButton> */}
-        <Typography variant="h6" className={classes.title}>
-          Bookmarks
+        <Typography variant="h1" className={classes.title}>
+          Home
         </Typography>
         <IconButton
           color="inherit"
           href={"https://github.com/Stoupe/custom-homepage-react"}
+          target="_blank"
         >
           <GitHubIcon />
         </IconButton>
@@ -74,12 +81,13 @@ const Header: React.FC = () => {
               }}
               color="inherit"
             >
-              <EditIcon />
+              <Delete />
             </IconButton>
 
             <IconButton onClick={handleMenu} color="inherit">
               <AccountCircle />
             </IconButton>
+
             <Menu
               id="menu-appbar"
               anchorEl={anchorEl}
