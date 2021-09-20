@@ -25,8 +25,13 @@ import { useFirebase } from "../functions/firebase";
 import { BookmarksContext, UserContext } from "./Contexts";
 import { FirebaseBookmark } from "./Types";
 import Image from "material-ui-image";
+import { style } from "@material-ui/system";
 
 const useStyles = makeStyles((theme) => ({
+  text: {
+    color: "white",
+    "& > input": { color: "white" },
+  },
   // root: {},
   // input: {
   //   // margin: "3rem",
@@ -284,9 +289,16 @@ const AddBookmarkDialog = (): JSX.Element => {
         <form onSubmit={handleSubmit} noValidate>
           <DialogTitle>New Bookmark</DialogTitle>
           <DialogContent
-            style={{ display: "grid", gap: "1rem", padding: "1rem auto" }}
+            style={{
+              display: "grid",
+              gap: "1rem",
+              padding: "1rem auto",
+              color: "white",
+            }}
           >
             <TextField
+              inputProps={{ style: { color: "white" } }}
+              style={{ marginTop: "5px" }}
               autoFocus
               label="Title"
               fullWidth
@@ -299,6 +311,7 @@ const AddBookmarkDialog = (): JSX.Element => {
               }}
             />
             <TextField
+              inputProps={{ style: { color: "white" } }}
               label="URL"
               type="url"
               fullWidth
@@ -374,6 +387,10 @@ const AddBookmarkDialog = (): JSX.Element => {
               renderInput={(params) => (
                 <TextField
                   {...params}
+                  inputProps={{
+                    ...params.inputProps,
+                    style: { color: "white" },
+                  }}
                   label="Category"
                   value={newBookmark.category}
                 />
