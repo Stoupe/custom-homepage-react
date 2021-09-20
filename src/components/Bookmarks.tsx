@@ -1,12 +1,9 @@
-import { Card, CardContent, Container, Typography } from "@material-ui/core";
+import { CircularProgress, Container, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 import React, { useContext, useEffect, useState } from "react";
 import { useBookmarksRef } from "../functions/useBookmarksRef";
-import BookmarkCategory from "./BookmarkCategory";
 import { BookmarksContext } from "./Contexts";
 import NewBookmark from "./NewBookmark";
-
-// test
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -71,7 +68,20 @@ const Bookmarks: React.FC = (): JSX.Element => {
     };
   }, []);
 
-  // if (loading) return <CircularProgress />;
+  if (loading)
+    return (
+      <div
+        style={{
+          width: "100%",
+          height: "90vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <Container className={classes.bookmarksContainer}>
@@ -100,29 +110,6 @@ const Bookmarks: React.FC = (): JSX.Element => {
       // <NewBookmark />
       // <NewBookmark /> */}
     </Container>
-  );
-
-  return (
-    <div className={classes.root}>
-      {/* TODO: Form validation, sumbit on enter, reset values on enter, no duplicates, auto update categories */}
-
-      {Object.keys(bookmarks).length === 0 && !loading && (
-        <div className={classes.noBookmarksContainer}>
-          <Card className={classes.noBookmarks}>
-            <CardContent>
-              <Typography variant="h5">No Bookmarks Found</Typography>
-              <Typography variant="body1">
-                Add bookmarks with the + icon in the bottom right corner
-              </Typography>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-
-      {Object.entries(bookmarks).map(([key, value]) => {
-        return <BookmarkCategory key={key} category={key} bookmarks={value} />;
-      })}
-    </div>
   );
 };
 

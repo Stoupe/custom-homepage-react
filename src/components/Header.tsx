@@ -13,9 +13,9 @@ import { AccountCircle } from "@material-ui/icons";
 import React, { useContext, useState } from "react";
 import { logInWithGoogle, logOut } from "../functions/auth";
 import { BookmarksContext, UserContext } from "./Contexts";
-import EditIcon from "@material-ui/icons/Edit";
+// import EditIcon from "@material-ui/icons/Edit";
+import Delete from "@material-ui/icons/Delete";
 import GitHubIcon from "@material-ui/icons/GitHub";
-import { title } from "process";
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -81,7 +81,7 @@ const Header: React.FC = () => {
               }}
               color="inherit"
             >
-              <EditIcon />
+              <Delete />
             </IconButton>
 
             <IconButton onClick={handleMenu} color="inherit">

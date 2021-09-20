@@ -1,28 +1,26 @@
 import {
-  Typography,
-  Grid,
   Box,
-  Button,
-  Grow,
-  Link,
   ButtonBase,
-  Tooltip,
+  Grid,
+  Grow,
+  Icon,
+  Typography,
 } from "@material-ui/core";
-import TouchRipple from "@material-ui/core/ButtonBase/TouchRipple";
-import { makeStyles, styled } from "@material-ui/styles";
+import { makeStyles } from "@material-ui/styles";
 import React, { useContext } from "react";
-import { useBookmarksRef } from "../functions/useBookmarksRef";
 import { BookmarksContext } from "./Contexts";
 import { FirebaseBookmark } from "./Types";
+import Edit from "@material-ui/icons/Edit";
+import Delete from "@material-ui/icons/Delete";
+import { deleteBookmark } from "../functions/bookmarkFunctions";
+import { useBookmarksRef } from "../functions/useBookmarksRef";
 
 const useStyles = makeStyles((theme) => ({}));
 
 const BM = ({ uid, bookmark }: { uid: string; bookmark: FirebaseBookmark }) => {
-  const classes = useStyles();
   const { editingView } = useContext(BookmarksContext);
-
-  const { title, url, thumbnailUrl } = bookmark;
   const bookmarksRef = useBookmarksRef();
+  const { title, url, thumbnailUrl } = bookmark;
 
   return (
     <Grow in={true}>
@@ -38,12 +36,35 @@ const BM = ({ uid, bookmark }: { uid: string; bookmark: FirebaseBookmark }) => {
             overflow: "hidden",
           }}
         >
-          <ButtonBase href={url as string}>
+          <ButtonBase href={editingView ? null : (url as string)}>
             <img
               src={thumbnailUrl}
               alt={title + " thumbnail"}
               style={{ height: "5rem", width: "5rem", borderRadius: "1rem" }}
             />
+            {editingView && (
+              <div
+                onClick={() => deleteBookmark(bookmarksRef, uid)}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  position: "absolute",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: "1rem",
+                  backgroundColor: "#00000099",
+                }}
+              >
+                <Delete
+                  style={{
+                    borderRadius: "1rem",
+                    width: "3rem",
+                    color: "white",
+                  }}
+                />
+              </div>
+            )}
           </ButtonBase>
           <Typography variant="h3" style={{ marginTop: "0.3rem" }}>
             {title}
