@@ -1,16 +1,14 @@
-import { Box, Container, Fab } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Container, Fab } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/styles";
 import AddBookmarkDialog from "./AddBookmarkDialog";
 import Bookmarks from "./Bookmarks";
 import { BookmarksContext, UserContext } from "./Contexts";
 import Header from "./Header";
-import TimeTracker from "./TimeTracker";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {},
-
   fab: {
     position: "fixed",
     bottom: "1rem",
@@ -18,10 +16,15 @@ const useStyles = makeStyles({
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: `20% auto 20%`,
+    gridTemplateColumns: `10% auto 10%`,
+
+    // [theme.breakpoints.down("sm")]: {
+    //   gridTemplateColumns: `0% auto 0%`,
+    // },
+
     gap: 0,
   },
-});
+}));
 
 const App = () => {
   const { user } = useContext(UserContext);
