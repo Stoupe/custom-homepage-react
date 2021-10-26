@@ -1,11 +1,13 @@
-import { ThemeProvider } from "@emotion/react";
+// import { Theme, ThemeProvider } from "@emotion/react";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import "@fontsource/poppins";
 import {
   createTheme,
   responsiveFontSizes,
+  Theme,
   ThemeOptions,
 } from "@material-ui/core/styles";
 import firebase from "firebase/app";
@@ -13,12 +15,16 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App";
 import { BookmarksContext, UserContext } from "./components/Contexts";
-// import StylesProvider from "@material-ui/styles";
 import { useFirebase } from "./functions/firebase";
 import "./main.css";
 import colours from "./variables/colours";
+import ThemeProvider from "@material-ui/core/styles/ThemeProvider";
 
-export const themeOptions: ThemeOptions = {
+declare module "@material-ui/styles" {
+  interface DefaultTheme extends Theme {}
+}
+
+const themeOptions: ThemeOptions = {
   components: {
     MuiAppBar: {
       styleOverrides: {
@@ -80,8 +86,8 @@ const Main = () => {
   const [editingBookmark, setEditingBookmark] =
     useState<firebase.firestore.DocumentReference>(null);
 
-  let theme = createTheme(themeOptions);
-  theme = responsiveFontSizes(theme);
+  const theme = responsiveFontSizes(createTheme(themeOptions));
+  // theme = responsiveFontSizes(theme);
 
   return (
     <React.StrictMode>
